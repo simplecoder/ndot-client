@@ -1,0 +1,12 @@
+<Alloy>
+	<TabGroup id='tgMain'>
+		<Tab id='tabMain'>
+			<Window class="container" id="winHome" tabBarHidden="true" navBarHidden="true">
+				<View>	
+					<ImageView></ImageView>
+					<Button onClick="btnBeginSr1_onClick" title="BEGIN NEW SR1 FORM" />
+				</View>
+			</Window>
+		</Tab>
+	</TabGroup>
+</Alloy>

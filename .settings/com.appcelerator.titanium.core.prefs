@@ -1,0 +1,16 @@
+eclipse.preferences.version=1
+provisioning_profiles/development/0372DFC5-0AC5-41E3-85A4-6AE2050903FE/appid=org.cchd.timecard
+provisioning_profiles/development/0372DFC5-0AC5-41E3-85A4-6AE2050903FE/name=Timecard Mobile App
+provisioning_profiles/development/0372DFC5-0AC5-41E3-85A4-6AE2050903FE/uuid=0372DFC5-0AC5-41E3-85A4-6AE2050903FE
+provisioning_profiles/development/16C72C73-DD3A-46E6-B759-42F7264C8FD1/appid=org.cchd.alloyhunter
+provisioning_profiles/development/16C72C73-DD3A-46E6-B759-42F7264C8FD1/name=tidevapp
+provisioning_profiles/development/16C72C73-DD3A-46E6-B759-42F7264C8FD1/uuid=16C72C73-DD3A-46E6-B759-42F7264C8FD1
+provisioning_profiles/development/2C54E651-C75A-4DB4-9B2A-4BD24B6A0023/appid=org.cchd.timecards
+provisioning_profiles/development/2C54E651-C75A-4DB4-9B2A-4BD24B6A0023/name=Timecards Dev
+provisioning_profiles/development/2C54E651-C75A-4DB4-9B2A-4BD24B6A0023/uuid=2C54E651-C75A-4DB4-9B2A-4BD24B6A0023
+provisioning_profiles/development/7CB0F0EF-D45C-428F-AC69-2B12788D4012/appid=org.cchd.timecards
+provisioning_profiles/development/7CB0F0EF-D45C-428F-AC69-2B12788D4012/name=Timecards Dev
+provisioning_profiles/development/7CB0F0EF-D45C-428F-AC69-2B12788D4012/uuid=7CB0F0EF-D45C-428F-AC69-2B12788D4012
+provisioning_profiles/development/864F4704-CE52-4054-83AE-736EFBC74FDD/appid=edu.unlv.ndot
+provisioning_profiles/development/864F4704-CE52-4054-83AE-736EFBC74FDD/name=ndotdev
+provisioning_profiles/development/864F4704-CE52-4054-83AE-736EFBC74FDD/uuid=864F4704-CE52-4054-83AE-736EFBC74FDD

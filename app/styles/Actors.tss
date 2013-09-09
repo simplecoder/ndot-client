@@ -1,0 +1,29 @@
+
+".container" : {
+  
+}
+
+'#winActors':{
+	barColor: '#000'
+}
+
+'TableView':{
+	top:'0dp',
+	backgroundColor: '#282828',
+	separatorColor: '#363636'
+}
+
+'Button':{
+	top: '10dp',
+	width:"280dp",
+	height:"40dp",
+	backgroundImage: 'none',
+	color: 'white',
+	font:{
+		fontWeight: 'bold'
+	},
+	backgroundGradient:{
+		type:'linear',
+		colors:[{color:'#009848',position:0.0},{color:'#00853f',position:1.0}]
+	}
+}

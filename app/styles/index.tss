@@ -1,0 +1,32 @@
+".container": {
+	backgroundColor:"#282828"
+},
+"Label": {
+	width: Ti.UI.SIZE,
+	height: Ti.UI.SIZE,
+	color: "#000"
+} 
+
+'ImageView':{
+	image:'/images/ndot-logo.png',
+	width:'170dp',
+	height:'79dp',
+	left:'75dp',
+	top:'60dp'
+}
+
+'Button':{
+	width:"250dp",
+	height:"45dp",
+	left:"35dp",
+	top:"180dp",
+	backgroundImage: 'none',
+	color: 'white',
+	font:{
+		fontWeight: 'bold'
+	},
+	backgroundGradient:{
+		type:'linear',
+		colors:[{color:'#009848',position:0.0},{color:'#00853f',position:1.0}]
+	}
+}

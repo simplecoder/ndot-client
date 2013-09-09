@@ -1,0 +1,41 @@
+
+".container" : {
+  backgroundColor:"#282828",
+  layout: 'vertical'
+}
+
+'#winLocation':{
+	navBarHidden: "false",
+	barColor: '#000'
+}
+
+
+".lblAddress":{
+	top: '15dp',
+	left: '15dp'
+}
+
+"Label":{
+	color: '#acacac',
+	font:{
+		fontSize: '16dp'
+	}
+}
+
+"TextField":{
+	top: '-25dp',
+	right: '15dp',
+	backgroundColor: '#acacac',
+	color: '#282828',
+	borderStyle: Ti.UI.INPUT_BORDERSTYLE_ROUNDED,
+	borderRadius: '5dp',
+	backgroundImage: 'none',
+	width: '220dp',
+	height: '30dp'
+}
+
+'#btnNext':{
+	top: '20dp',
+	right: '15dp'
+}
+

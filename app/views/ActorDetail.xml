@@ -1,0 +1,34 @@
+<Alloy>
+	<Window id="winActorDetail" title="Actor Detail">
+		<ScrollView class="container">
+			<Label text="Actor Type"></Label>
+			<TextField id='txtActorType' onClick="txtActorType_onClick"></TextField>
+			<View id="vActorType">
+				<Picker id="pActorType" selectionIndicator="true" useSpinner="true" onChange="pActorType_onChange">
+		            <Column id="column1">
+		                <Row title="Driver"/>
+		                <Row title="Pedestrian"/>
+		                <Row title="Parked Vehicles"/>
+		                <Row title="Pedal Cyclist"/>
+		                <Row title="Other"/>
+		            </Column>
+		        </Picker>
+		        <Button id="btnClosePicker" onClick="btnClosePicker_onClick" title="DONE" />
+			</View>
+			<Button id="btnCaptureVin" onClick="btnCaptureVin_onClick" title="CAPTURE VIN" />
+			<Button id="btnCaptureDl" onClick="btnCaptureDl_onClick" title="CAPTURE DL" />
+			<Label text="Plate #"></Label>
+			<TextField id='txtPlateNum'></TextField>
+			<Label text="Plate State"></Label>
+			<TextField id='txtPlateState' value="NV"></TextField>
+			<Label text="Owner same as driver?"></Label>
+			<!-- <Switch id="swOwnerDriver" value="true" onChange="swOwnerDriver_onChange"/> -->
+			<TabbedBar id="tbOwnerDriver" platform="ios">
+	            <Labels>
+	                <Label>YES</Label>
+	                <Label>NO</Label>
+	            </Labels>
+	        </TabbedBar>
+		</ScrollView>	
+	</Window>
+</Alloy>

@@ -1,0 +1,8 @@
+<Alloy>
+	<Window id="winActors" title="Actors" class="container">
+		<ScrollView>
+			<TableView id='tvActors' onClick="tvActors_onClick"></TableView>
+			<Button onClick="btnSubmitSr1_onClick" title="SUBMIT SR1 FORM" />	
+		</ScrollView>
+	</Window>
+</Alloy>

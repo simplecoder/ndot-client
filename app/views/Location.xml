@@ -1,0 +1,19 @@
+<Alloy>
+	<Window class="container" id='winLocation' title="Location">
+		<ScrollView layout="vertical">
+			<!-- <Label id="lblLocation" text="Location"></Label> -->
+			<View id="mapview" ns="Ti.Map" width="290dp" height="250dp" top="10dp" onComplete="setRegion"
+	            animate="true" regionFit="true" userLocation="true"
+	            mapType="Ti.Map.STANDARD_TYPE" >
+	        </View>
+	        <Label class='lblAddress' text="Street"></Label>
+	        <TextField id='txtStreet'></TextField>
+	        <Label class='lblAddress' text="City"></Label>
+	        <TextField id='txtCity'></TextField>
+	        <Label class='lblAddress' text="County"></Label>
+	        <TextField id='txtCounty'></TextField>
+	        <Label id='btnNext' onClick="btnNext_onClick" text="Next >>"></Label>
+	        <Label height='20dp'></Label>
+		</ScrollView>
+	</Window>
+</Alloy>
