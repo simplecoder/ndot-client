@@ -1,10 +1,11 @@
 ".container" : {
-	backgroundColor:"#282828",
+	backgroundImage: 'images/dark_fish_skin.png',
+	backgroundRepeat: 'true',
 	layout: 'vertical'  
 }
 
 '#winActorDetail':{
-	barColor: '#000'
+	barColor: '#111'
 }
 
 '#btnCaptureVin':{
@@ -89,4 +90,20 @@
 
 '#txtActorType':{
 	enabled: 'false'
+}
+
+'#btnDeleteActor':{
+	top: '20dp',
+	width: '280dp',
+	backgroundGradient:{
+		type:'linear',
+		colors:[{color:'#d01211',position:0.0},{color:'#b31111',position:1.0}]
+	}
+}
+
+'#btnCaptureDlOwner':{
+	top: '15dp',
+	width: '290dp',
+	height: 0,
+	visible: false
 }

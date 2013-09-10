@@ -1,11 +1,11 @@
 <Alloy>
-	<Window id="winActorDetail" title="Actor Detail">
+	<Window id="winActorDetail" title="Actor Detail" onClose='winActorDetail_onClose'>
 		<ScrollView class="container">
 			<Label text="Actor Type"></Label>
 			<TextField id='txtActorType' onClick="txtActorType_onClick"></TextField>
 			<View id="vActorType">
 				<Picker id="pActorType" selectionIndicator="true" useSpinner="true" onChange="pActorType_onChange">
-		            <Column id="column1">
+		            <Column>
 		                <Row title="Driver"/>
 		                <Row title="Pedestrian"/>
 		                <Row title="Parked Vehicles"/>
@@ -22,13 +22,14 @@
 			<Label text="Plate State"></Label>
 			<TextField id='txtPlateState' value="NV"></TextField>
 			<Label text="Owner same as driver?"></Label>
-			<!-- <Switch id="swOwnerDriver" value="true" onChange="swOwnerDriver_onChange"/> -->
-			<TabbedBar id="tbOwnerDriver" platform="ios">
+			<TabbedBar id="tbOwnerDriver" platform="ios" onClick="tbOwnerDriver_onClick">
 	            <Labels>
 	                <Label>YES</Label>
 	                <Label>NO</Label>
 	            </Labels>
 	        </TabbedBar>
+	        <Button id="btnCaptureDlOwner" onClick="btnCaptureDlOwner_onClick" title="CAPTURE DL - OWNER" />
+	        <Button id="btnDeleteActor" onClick="btnDeleteActor_onClick" title="DELETE ACTOR" />
 		</ScrollView>	
 	</Window>
 </Alloy>

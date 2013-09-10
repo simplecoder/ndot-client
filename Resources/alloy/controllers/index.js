@@ -15,25 +15,26 @@ function Controller() {
         id: "tgMain"
     });
     $.__views.winHome = Ti.UI.createWindow({
-        backgroundColor: "#282828",
+        backgroundImage: "images/dark_fish_skin.png",
+        backgroundRepeat: "true",
         id: "winHome",
         tabBarHidden: "true",
         navBarHidden: "true"
     });
-    $.__views.__alloyId19 = Ti.UI.createView({
-        id: "__alloyId19"
+    $.__views.__alloyId20 = Ti.UI.createView({
+        id: "__alloyId20"
     });
-    $.__views.winHome.add($.__views.__alloyId19);
-    $.__views.__alloyId20 = Ti.UI.createImageView({
+    $.__views.winHome.add($.__views.__alloyId20);
+    $.__views.__alloyId21 = Ti.UI.createImageView({
         image: "/images/ndot-logo.png",
         width: "170dp",
         height: "79dp",
         left: "75dp",
         top: "60dp",
-        id: "__alloyId20"
+        id: "__alloyId21"
     });
-    $.__views.__alloyId19.add($.__views.__alloyId20);
-    $.__views.__alloyId21 = Ti.UI.createButton({
+    $.__views.__alloyId20.add($.__views.__alloyId21);
+    $.__views.__alloyId22 = Ti.UI.createButton({
         width: "250dp",
         height: "45dp",
         left: "35dp",
@@ -54,10 +55,10 @@ function Controller() {
             } ]
         },
         title: "BEGIN NEW SR1 FORM",
-        id: "__alloyId21"
+        id: "__alloyId22"
     });
-    $.__views.__alloyId19.add($.__views.__alloyId21);
-    btnBeginSr1_onClick ? $.__views.__alloyId21.addEventListener("click", btnBeginSr1_onClick) : __defers["$.__views.__alloyId21!click!btnBeginSr1_onClick"] = true;
+    $.__views.__alloyId20.add($.__views.__alloyId22);
+    btnBeginSr1_onClick ? $.__views.__alloyId22.addEventListener("click", btnBeginSr1_onClick) : __defers["$.__views.__alloyId22!click!btnBeginSr1_onClick"] = true;
     $.__views.tabMain = Ti.UI.createTab({
         window: $.__views.winHome,
         id: "tabMain"
@@ -69,7 +70,7 @@ function Controller() {
     Alloy.Globals.tgMain = $.tgMain;
     Alloy.Globals.tabMain = $.tabMain;
     $.tgMain.open();
-    __defers["$.__views.__alloyId21!click!btnBeginSr1_onClick"] && $.__views.__alloyId21.addEventListener("click", btnBeginSr1_onClick);
+    __defers["$.__views.__alloyId22!click!btnBeginSr1_onClick"] && $.__views.__alloyId22.addEventListener("click", btnBeginSr1_onClick);
     _.extend($, exports);
 }
 

@@ -1,16 +1,22 @@
 
 ".container" : {
-  
+  	backgroundImage: 'images/dark_fish_skin.png',
+	backgroundRepeat: 'true'
+}
+
+'ScrollView':{
+	layout: 'vertical'
 }
 
 '#winActors':{
-	barColor: '#000'
+	barColor: '#111'
 }
 
 'TableView':{
 	top:'0dp',
 	backgroundColor: '#282828',
-	separatorColor: '#363636'
+	separatorColor: '#363636',
+	height: 0
 }
 
 'Button':{

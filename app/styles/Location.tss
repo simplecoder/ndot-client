@@ -1,12 +1,13 @@
 
 ".container" : {
-  backgroundColor:"#282828",
-  layout: 'vertical'
+  	backgroundImage: 'images/dark_fish_skin.png',
+	backgroundRepeat: 'true',
+  	layout: 'vertical'
 }
 
 '#winLocation':{
 	navBarHidden: "false",
-	barColor: '#000'
+	barColor: '#111'
 }
 
 
@@ -35,7 +36,7 @@
 }
 
 '#btnNext':{
-	top: '20dp',
+	top: '15dp',
 	right: '15dp'
 }
 

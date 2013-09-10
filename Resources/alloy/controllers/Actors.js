@@ -10,6 +10,11 @@ function Controller() {
         });
         plusBtn.addEventListener("click", plusBtn_onClick);
         $.winActors.rightNavButton = plusBtn;
+        for (var i = 0; $.sr1Form.actors.length > i; i++) {
+            var row = actorTableRowFactory($.sr1Form.actors[i]);
+            $.tvActors.appendRow(row);
+        }
+        $.tvActors.height = 60 * $.sr1Form.actors.length + "dp";
     }
     function plusBtn_onClick() {
         var actor = {
@@ -17,18 +22,114 @@ function Controller() {
             vinImage: "",
             dlBarcode: "",
             plateNum: "",
-            plateState: ""
+            plateState: "NV",
+            dlBarcodeOwner: ""
         };
+        $.sr1Form.actors.push(actor);
         var actorDetailController = Alloy.createController("ActorDetail", {
-            actor: actor
+            actor: actor,
+            onCloseCb: ActorDetail_onClose,
+            mode: "Add"
         });
         Alloy.Globals.tabMain.open(actorDetailController.getView());
     }
-    function tvActors_onClick(e) {
-        $.timeEntryRowBeingModifiedIndex = e.index;
-        getCurrentActor();
+    function ActorDetail_onClose(actorDetailResult) {
+        if ("Delete" == actorDetailResult) {
+            $.sr1Form.actors.splice($.actorRowBeingModified, 1);
+            $.tvActors.deleteRow($.actorRowBeingModified);
+            $.tvActors.height = 60 * $.tvActors.data[0].rowCount + "dp";
+        } else if ("Add" == actorDetailResult) {
+            var row = actorTableRowFactory($.sr1Form.actors[$.sr1Form.actors.length - 1]);
+            $.tvActors.appendRow(row);
+            $.tvActors.height = 60 * $.tvActors.data[0].rowCount + "dp";
+        } else {
+            var actor = $.sr1Form.actors[$.actorRowBeingModified];
+            var tvrActor = $.tvActors.data[0].rows[$.actorRowBeingModified];
+            var rowChildren = tvrActor.getChildren();
+            rowChildren[0].text = getSymbolCharForActorType(actor);
+            rowChildren[1].text = actor.actorType;
+            rowChildren[2].text = actor.plateNum + " - " + actor.plateState;
+        }
     }
-    function btnSubmitSr1_onClick() {}
+    function getSymbolCharForActorType(actor) {
+        var lblActorTypeChar = "";
+        switch (actor.actorType) {
+          case "Driver":
+            lblActorTypeChar = "D";
+            break;
+
+          case "Pedestrian":
+            lblActorTypeChar = "P";
+            break;
+
+          case "Parked Vehicles":
+            lblActorTypeChar = "V";
+            break;
+
+          case "Pedal Cyclist":
+            lblActorTypeChar = "C";
+            break;
+
+          case "Other":
+            lblActorTypeChar = "O";
+        }
+        return lblActorTypeChar;
+    }
+    function actorTableRowFactory(actor) {
+        var row = Ti.UI.createTableViewRow({
+            height: "60dp"
+        });
+        var lblActorTypeSymbol = Ti.UI.createLabel({
+            text: getSymbolCharForActorType(actor),
+            color: "white",
+            borderRadius: "5dp",
+            borderWidth: "2dp",
+            borderColor: "white",
+            textAlign: Ti.UI.TEXT_ALIGNMENT_CENTER,
+            top: "10dp",
+            left: "10dp",
+            width: "40dp",
+            height: "40dp",
+            font: {
+                fontSize: "15dp"
+            }
+        });
+        var lblActorType = Ti.UI.createLabel({
+            text: actor.actorType,
+            color: "white",
+            top: "10dp",
+            font: {
+                fontSize: "13dp"
+            },
+            left: "60dp"
+        });
+        var lblPlate = Ti.UI.createLabel({
+            text: actor.plateNum + " - " + actor.plateState,
+            color: "white",
+            top: "28dp",
+            font: {
+                fontSize: "13dp"
+            },
+            left: "60dp"
+        });
+        row.add(lblActorTypeSymbol);
+        row.add(lblActorType);
+        row.add(lblPlate);
+        return row;
+    }
+    function tvActors_onClick(e) {
+        $.actorRowBeingModified = e.index;
+        var actor = $.sr1Form.actors[e.index];
+        var actorDetailController = Alloy.createController("ActorDetail", {
+            actor: actor,
+            onCloseCb: ActorDetail_onClose,
+            mode: "Edit"
+        });
+        Alloy.Globals.tabMain.open(actorDetailController.getView());
+    }
+    function btnSubmitSr1_onClick() {
+        debugger;
+    }
     require("alloy/controllers/BaseController").apply(this, Array.prototype.slice.call(arguments));
     this.__controllerPath = "Actors";
     arguments[0] ? arguments[0]["__parentSymbol"] : null;
@@ -38,24 +139,28 @@ function Controller() {
     var exports = {};
     var __defers = {};
     $.__views.winActors = Ti.UI.createWindow({
-        barColor: "#000",
+        backgroundImage: "images/dark_fish_skin.png",
+        backgroundRepeat: "true",
+        barColor: "#111",
         id: "winActors",
         title: "Actors"
     });
     $.__views.winActors && $.addTopLevelView($.__views.winActors);
-    $.__views.__alloyId17 = Ti.UI.createScrollView({
-        id: "__alloyId17"
+    $.__views.__alloyId18 = Ti.UI.createScrollView({
+        layout: "vertical",
+        id: "__alloyId18"
     });
-    $.__views.winActors.add($.__views.__alloyId17);
+    $.__views.winActors.add($.__views.__alloyId18);
     $.__views.tvActors = Ti.UI.createTableView({
         top: "0dp",
         backgroundColor: "#282828",
         separatorColor: "#363636",
+        height: 0,
         id: "tvActors"
     });
-    $.__views.__alloyId17.add($.__views.tvActors);
+    $.__views.__alloyId18.add($.__views.tvActors);
     tvActors_onClick ? $.__views.tvActors.addEventListener("click", tvActors_onClick) : __defers["$.__views.tvActors!click!tvActors_onClick"] = true;
-    $.__views.__alloyId18 = Ti.UI.createButton({
+    $.__views.__alloyId19 = Ti.UI.createButton({
         top: "10dp",
         width: "280dp",
         height: "40dp",
@@ -75,15 +180,17 @@ function Controller() {
             } ]
         },
         title: "SUBMIT SR1 FORM",
-        id: "__alloyId18"
+        id: "__alloyId19"
     });
-    $.__views.__alloyId17.add($.__views.__alloyId18);
-    btnSubmitSr1_onClick ? $.__views.__alloyId18.addEventListener("click", btnSubmitSr1_onClick) : __defers["$.__views.__alloyId18!click!btnSubmitSr1_onClick"] = true;
+    $.__views.__alloyId18.add($.__views.__alloyId19);
+    btnSubmitSr1_onClick ? $.__views.__alloyId19.addEventListener("click", btnSubmitSr1_onClick) : __defers["$.__views.__alloyId19!click!btnSubmitSr1_onClick"] = true;
     exports.destroy = function() {};
     _.extend($, $.__views);
+    var args = arguments[0] || {};
+    $.sr1Form = args.sr1Form;
     setupView();
     __defers["$.__views.tvActors!click!tvActors_onClick"] && $.__views.tvActors.addEventListener("click", tvActors_onClick);
-    __defers["$.__views.__alloyId18!click!btnSubmitSr1_onClick"] && $.__views.__alloyId18.addEventListener("click", btnSubmitSr1_onClick);
+    __defers["$.__views.__alloyId19!click!btnSubmitSr1_onClick"] && $.__views.__alloyId19.addEventListener("click", btnSubmitSr1_onClick);
     _.extend($, exports);
 }
 

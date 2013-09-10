@@ -1,5 +1,6 @@
 ".container": {
-	backgroundColor:"#282828"
+	backgroundImage: 'images/dark_fish_skin.png',
+	backgroundRepeat: 'true'
 },
 "Label": {
 	width: Ti.UI.SIZE,

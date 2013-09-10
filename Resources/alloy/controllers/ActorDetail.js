@@ -10,6 +10,52 @@ function Controller() {
     function pActorType_onChange(e) {
         $.txtActorType.setValue(e.selectedValue[0]);
     }
+    function btnDeleteActor_onClick() {
+        $.mode = "Delete";
+        $.winActorDetail.close();
+    }
+    function winActorDetail_onClose() {
+        $.actor.actorType = $.txtActorType.getValue();
+        $.actor.plateNum = $.txtPlateNum.getValue();
+        $.actor.plateState = $.txtPlateState.getValue();
+        $.onCloseCb($.mode);
+    }
+    function tbOwnerDriver_onClick(e) {
+        if (1 == e.index) {
+            $.btnCaptureDlOwner.setHeight("40dp");
+            $.btnCaptureDlOwner.setVisible(true);
+        } else {
+            $.btnCaptureDlOwner.setHeight(0);
+            $.btnCaptureDlOwner.setVisible(false);
+        }
+    }
+    function setupView() {
+        $.txtActorType.setValue($.actor.actorType);
+        switch ($.actor.actorType) {
+          case "Driver":
+            $.pActorType.setSelectedRow(0, 0, true);
+            break;
+
+          case "Pedestrian":
+            $.pActorType.setSelectedRow(0, 1, true);
+            break;
+
+          case "Parked Vehicles":
+            $.pActorType.setSelectedRow(0, 2, true);
+            break;
+
+          case "Pedal Cyclist":
+            $.pActorType.setSelectedRow(0, 3, true);
+            break;
+
+          case "Other":
+            $.pActorType.setSelectedRow(0, 4, true);
+        }
+        $.txtPlateNum.setValue($.actor.plateNum);
+        $.txtPlateState.setValue($.actor.plateState);
+        "Add" == $.mode && $.btnDeleteActor.setVisible(false);
+    }
+    function btnCaptureDlOwner_onClick() {}
     require("alloy/controllers/BaseController").apply(this, Array.prototype.slice.call(arguments));
     this.__controllerPath = "ActorDetail";
     arguments[0] ? arguments[0]["__parentSymbol"] : null;
@@ -19,13 +65,15 @@ function Controller() {
     var exports = {};
     var __defers = {};
     $.__views.winActorDetail = Ti.UI.createWindow({
-        barColor: "#000",
+        barColor: "#111",
         id: "winActorDetail",
         title: "Actor Detail"
     });
     $.__views.winActorDetail && $.addTopLevelView($.__views.winActorDetail);
+    winActorDetail_onClose ? $.__views.winActorDetail.addEventListener("close", winActorDetail_onClose) : __defers["$.__views.winActorDetail!close!winActorDetail_onClose"] = true;
     $.__views.__alloyId0 = Ti.UI.createScrollView({
-        backgroundColor: "#282828",
+        backgroundImage: "images/dark_fish_skin.png",
+        backgroundRepeat: "true",
         layout: "vertical",
         id: "__alloyId0"
     });
@@ -70,35 +118,35 @@ function Controller() {
         useSpinner: "true"
     });
     $.__views.vActorType.add($.__views.pActorType);
-    $.__views.column1 = Ti.UI.createPickerColumn({
-        id: "column1"
-    });
-    $.__views.pActorType.add($.__views.column1);
-    $.__views.__alloyId3 = Ti.UI.createPickerRow({
-        title: "Driver",
+    $.__views.__alloyId3 = Ti.UI.createPickerColumn({
         id: "__alloyId3"
     });
-    $.__views.column1.addRow($.__views.__alloyId3);
+    $.__views.pActorType.add($.__views.__alloyId3);
     $.__views.__alloyId4 = Ti.UI.createPickerRow({
-        title: "Pedestrian",
+        title: "Driver",
         id: "__alloyId4"
     });
-    $.__views.column1.addRow($.__views.__alloyId4);
+    $.__views.__alloyId3.addRow($.__views.__alloyId4);
     $.__views.__alloyId5 = Ti.UI.createPickerRow({
-        title: "Parked Vehicles",
+        title: "Pedestrian",
         id: "__alloyId5"
     });
-    $.__views.column1.addRow($.__views.__alloyId5);
+    $.__views.__alloyId3.addRow($.__views.__alloyId5);
     $.__views.__alloyId6 = Ti.UI.createPickerRow({
-        title: "Pedal Cyclist",
+        title: "Parked Vehicles",
         id: "__alloyId6"
     });
-    $.__views.column1.addRow($.__views.__alloyId6);
+    $.__views.__alloyId3.addRow($.__views.__alloyId6);
     $.__views.__alloyId7 = Ti.UI.createPickerRow({
-        title: "Other",
+        title: "Pedal Cyclist",
         id: "__alloyId7"
     });
-    $.__views.column1.addRow($.__views.__alloyId7);
+    $.__views.__alloyId3.addRow($.__views.__alloyId7);
+    $.__views.__alloyId8 = Ti.UI.createPickerRow({
+        title: "Other",
+        id: "__alloyId8"
+    });
+    $.__views.__alloyId3.addRow($.__views.__alloyId8);
     pActorType_onChange ? $.__views.pActorType.addEventListener("change", pActorType_onChange) : __defers["$.__views.pActorType!change!pActorType_onChange"] = true;
     $.__views.btnClosePicker = Ti.UI.createButton({
         width: "320dp",
@@ -174,7 +222,7 @@ function Controller() {
     });
     $.__views.__alloyId0.add($.__views.btnCaptureDl);
     btnCaptureDl_onClick ? $.__views.btnCaptureDl.addEventListener("click", btnCaptureDl_onClick) : __defers["$.__views.btnCaptureDl!click!btnCaptureDl_onClick"] = true;
-    $.__views.__alloyId8 = Ti.UI.createLabel({
+    $.__views.__alloyId9 = Ti.UI.createLabel({
         top: "15dp",
         left: "15dp",
         color: "#acacac",
@@ -182,9 +230,9 @@ function Controller() {
             fontSize: "16dp"
         },
         text: "Plate #",
-        id: "__alloyId8"
+        id: "__alloyId9"
     });
-    $.__views.__alloyId0.add($.__views.__alloyId8);
+    $.__views.__alloyId0.add($.__views.__alloyId9);
     $.__views.txtPlateNum = Ti.UI.createTextField({
         top: "-25dp",
         right: "15dp",
@@ -198,7 +246,7 @@ function Controller() {
         id: "txtPlateNum"
     });
     $.__views.__alloyId0.add($.__views.txtPlateNum);
-    $.__views.__alloyId9 = Ti.UI.createLabel({
+    $.__views.__alloyId10 = Ti.UI.createLabel({
         top: "15dp",
         left: "15dp",
         color: "#acacac",
@@ -206,9 +254,9 @@ function Controller() {
             fontSize: "16dp"
         },
         text: "Plate State",
-        id: "__alloyId9"
+        id: "__alloyId10"
     });
-    $.__views.__alloyId0.add($.__views.__alloyId9);
+    $.__views.__alloyId0.add($.__views.__alloyId10);
     $.__views.txtPlateState = Ti.UI.createTextField({
         top: "-25dp",
         right: "15dp",
@@ -223,7 +271,7 @@ function Controller() {
         value: "NV"
     });
     $.__views.__alloyId0.add($.__views.txtPlateState);
-    $.__views.__alloyId10 = Ti.UI.createLabel({
+    $.__views.__alloyId11 = Ti.UI.createLabel({
         top: "15dp",
         left: "15dp",
         color: "#acacac",
@@ -231,20 +279,20 @@ function Controller() {
             fontSize: "16dp"
         },
         text: "Owner same as driver?",
-        id: "__alloyId10"
+        id: "__alloyId11"
     });
-    $.__views.__alloyId0.add($.__views.__alloyId10);
-    var __alloyId12 = [];
-    var __alloyId15 = {
+    $.__views.__alloyId0.add($.__views.__alloyId11);
+    var __alloyId13 = [];
+    var __alloyId16 = {
         title: "YES",
         ns: "Alloy.Abstract"
     };
-    __alloyId12.push(__alloyId15);
-    var __alloyId16 = {
+    __alloyId13.push(__alloyId16);
+    var __alloyId17 = {
         title: "NO",
         ns: "Alloy.Abstract"
     };
-    __alloyId12.push(__alloyId16);
+    __alloyId13.push(__alloyId17);
     $.__views.tbOwnerDriver = Ti.UI.iOS.createTabbedBar({
         index: 0,
         backgroundColor: "#363636",
@@ -255,17 +303,76 @@ function Controller() {
         font: {
             fontSize: "14dp"
         },
-        labels: __alloyId12,
+        labels: __alloyId13,
         id: "tbOwnerDriver"
     });
     $.__views.__alloyId0.add($.__views.tbOwnerDriver);
+    tbOwnerDriver_onClick ? $.__views.tbOwnerDriver.addEventListener("click", tbOwnerDriver_onClick) : __defers["$.__views.tbOwnerDriver!click!tbOwnerDriver_onClick"] = true;
+    $.__views.btnCaptureDlOwner = Ti.UI.createButton({
+        width: "290dp",
+        height: 0,
+        backgroundImage: "none",
+        color: "white",
+        font: {
+            fontWeight: "bold"
+        },
+        backgroundGradient: {
+            type: "linear",
+            colors: [ {
+                color: "#009848",
+                position: 0
+            }, {
+                color: "#00853f",
+                position: 1
+            } ]
+        },
+        top: "15dp",
+        visible: false,
+        id: "btnCaptureDlOwner",
+        title: "CAPTURE DL - OWNER"
+    });
+    $.__views.__alloyId0.add($.__views.btnCaptureDlOwner);
+    btnCaptureDlOwner_onClick ? $.__views.btnCaptureDlOwner.addEventListener("click", btnCaptureDlOwner_onClick) : __defers["$.__views.btnCaptureDlOwner!click!btnCaptureDlOwner_onClick"] = true;
+    $.__views.btnDeleteActor = Ti.UI.createButton({
+        width: "280dp",
+        height: "40dp",
+        backgroundImage: "none",
+        color: "white",
+        font: {
+            fontWeight: "bold"
+        },
+        backgroundGradient: {
+            type: "linear",
+            colors: [ {
+                color: "#d01211",
+                position: 0
+            }, {
+                color: "#b31111",
+                position: 1
+            } ]
+        },
+        top: "20dp",
+        id: "btnDeleteActor",
+        title: "DELETE ACTOR"
+    });
+    $.__views.__alloyId0.add($.__views.btnDeleteActor);
+    btnDeleteActor_onClick ? $.__views.btnDeleteActor.addEventListener("click", btnDeleteActor_onClick) : __defers["$.__views.btnDeleteActor!click!btnDeleteActor_onClick"] = true;
     exports.destroy = function() {};
     _.extend($, $.__views);
+    var args = arguments[0] || {};
+    $.actor = args.actor;
+    $.onCloseCb = args.onCloseCb;
+    $.mode = args.mode;
+    setupView();
+    __defers["$.__views.winActorDetail!close!winActorDetail_onClose"] && $.__views.winActorDetail.addEventListener("close", winActorDetail_onClose);
     __defers["$.__views.txtActorType!click!txtActorType_onClick"] && $.__views.txtActorType.addEventListener("click", txtActorType_onClick);
     __defers["$.__views.pActorType!change!pActorType_onChange"] && $.__views.pActorType.addEventListener("change", pActorType_onChange);
     __defers["$.__views.btnClosePicker!click!btnClosePicker_onClick"] && $.__views.btnClosePicker.addEventListener("click", btnClosePicker_onClick);
     __defers["$.__views.btnCaptureVin!click!btnCaptureVin_onClick"] && $.__views.btnCaptureVin.addEventListener("click", btnCaptureVin_onClick);
     __defers["$.__views.btnCaptureDl!click!btnCaptureDl_onClick"] && $.__views.btnCaptureDl.addEventListener("click", btnCaptureDl_onClick);
+    __defers["$.__views.tbOwnerDriver!click!tbOwnerDriver_onClick"] && $.__views.tbOwnerDriver.addEventListener("click", tbOwnerDriver_onClick);
+    __defers["$.__views.btnCaptureDlOwner!click!btnCaptureDlOwner_onClick"] && $.__views.btnCaptureDlOwner.addEventListener("click", btnCaptureDlOwner_onClick);
+    __defers["$.__views.btnDeleteActor!click!btnDeleteActor_onClick"] && $.__views.btnDeleteActor.addEventListener("click", btnDeleteActor_onClick);
     _.extend($, exports);
 }
 

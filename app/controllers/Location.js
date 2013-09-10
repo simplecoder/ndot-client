@@ -1,3 +1,7 @@
+var sr1Form = {
+	actors: []
+};
+
 function setRegion(evt) {
     // For the iOS platform, wait for the complete event to ensure the region is set
     // if (OS_IOS) {
@@ -9,6 +13,11 @@ function setRegion(evt) {
 }
 
 function btnNext_onClick(){
-	var actorsController = Alloy.createController('Actors');    
+	sr1Form.street = $.txtStreet.getValue();
+	sr1Form.city = $.txtCity.getValue();
+	sr1Form.county = $.txtCounty.getValue();
+	var actorsController = Alloy.createController('Actors',{
+		sr1Form: sr1Form
+	});    
     Alloy.Globals.tabMain.open(actorsController.getView());
 }
