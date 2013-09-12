@@ -1,3 +1,4 @@
+var serviceAgent = require('serviceAgent');
 
 var args = arguments[0] || {};
 $.sr1Form = args.sr1Form;
@@ -23,7 +24,7 @@ function setupView(){
 
 function plusBtn_onClick(){
 	var actor = {
-		actorType: '',
+		actorType: 'Driver',
 		vinImage: '',
 		dlBarcode: '',
 		plateNum: '',
@@ -138,7 +139,12 @@ function tvActors_onClick(e){
 }
 
 function btnSubmitSr1_onClick(){
+	var a = JSON.stringify($.sr1Form)
+	console.log(a);
 	debugger;
+	serviceAgent.submitSr1Form($.sr1Form, function(res, status){
+		debugger;
+	});
 }
 
 setupView();

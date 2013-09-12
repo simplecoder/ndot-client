@@ -2,13 +2,61 @@ var args = arguments[0] || {};
 $.actor = args.actor;
 $.onCloseCb = args.onCloseCb;
 $.mode = args.mode;
+$.imageScaleFactor = 8;
 
 function btnCaptureVin_onClick(){
   
 }
 
 function btnCaptureDl_onClick(){
-	
+	var cameraOptions = getCameraOptions();
+	cameraOptions.success = function(e) {
+    	var resizedImage = e.media.imageAsResized(e.media.width / $.imageScaleFactor, e.media.height / $.imageScaleFactor)
+        $.actor.dlBarcode = Ti.Utils.base64encode(resizedImage).toString();
+        //$.actor.dlBarcode = resizedImage.toString();
+    }
+    if (Ti.Media.isCameraSupported) {
+        Ti.Media.showCamera(cameraOptions);
+    } else {
+        Ti.Media.openPhotoGallery(cameraOptions);
+    }
+}
+
+function btnCaptureDlOwner_onClick(){
+	var cameraOptions = getCameraOptions();
+	cameraOptions.success = function(e) {
+    	//var resizedImage = e.media.imageAsResized(e.media.width / $.imageScaleFactor, e.media.height / $.imageScaleFactor)
+        $.actor.dlBarcodeOwner = Ti.Utils.base64encode(e.media).toString();
+        //$.actor.dlBarcodeOwner = e.media.toString();
+    }
+    if (Ti.Media.isCameraSupported) {
+        Ti.Media.showCamera(cameraOptions);
+    } else {
+        Ti.Media.openPhotoGallery(cameraOptions);
+    }	
+}
+
+function getCameraOptions(){
+	var cameraOptions = {
+        cancel : function() {
+            // cancel and close window
+        },
+        error : function(error) {
+            var a = Ti.UI.createAlertDialog({
+                title : "Camera Error"
+            });
+            if (error.code == Ti.Media.NO_CAMERA) {
+                a.setMessage("MISSING CAMERA");
+            } else {
+                a.setMessage('Unexpected error: ' + error.code);
+            }
+            a.show();
+        },
+        saveToPhotoGallery : true,
+        allowEditing : true,
+        mediaTypes : [Ti.Media.MEDIA_TYPE_PHOTO]
+    };
+    return cameraOptions;
 }
 
 function txtActorType_onClick(){
@@ -71,9 +119,4 @@ function setupView(){
 	}
 }
 
-function btnCaptureDlOwner_onClick(){
-	
-}
-
 setupView();
-

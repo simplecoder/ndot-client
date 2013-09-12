@@ -1,3 +1,4 @@
 module.exports = {
-    dependencies: {}
+    dependencies: {},
+    ApiBaseUri: "https://api-dev.southernnevadahealthdistricts.org/"
 };

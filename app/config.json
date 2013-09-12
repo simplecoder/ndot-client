@@ -1,5 +1,7 @@
 {
-	"global": {}, 
+	"global": {
+		"ApiBaseUri": "https://api-dev.southernnevadahealthdistricts.org/"
+	}, 
 	"env:development": {}, 
 	"env:test": {}, 
 	"env:production": {}, 

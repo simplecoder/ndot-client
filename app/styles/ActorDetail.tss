@@ -10,7 +10,7 @@
 
 '#btnCaptureVin':{
 	left:'15dp',
-	top:"10dp"
+	top:"15dp"
 }
 
 '#btnCaptureDl':{
@@ -39,7 +39,7 @@
 }
 
 '#pActorType':{
-	top: '10dp'
+	top: '15dp'
 }
 
 '#btnClosePicker':{
@@ -64,13 +64,9 @@
 	height: '30dp'
 }
 
-"Switch":{
-	top: '-25dp',
-	right: '15dp'
-}
 
 "Label":{
-	top: '15dp',
+	top: '20dp',
 	left: '15dp',
 	color: '#acacac',
 	font:{
@@ -93,7 +89,7 @@
 }
 
 '#btnDeleteActor':{
-	top: '20dp',
+	top: '15dp',
 	width: '280dp',
 	backgroundGradient:{
 		type:'linear',
@@ -102,7 +98,7 @@
 }
 
 '#btnCaptureDlOwner':{
-	top: '15dp',
+	top: '20dp',
 	width: '290dp',
 	height: 0,
 	visible: false

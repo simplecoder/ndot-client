@@ -1,5 +1,23 @@
 function Controller() {
-    function setRegion() {}
+    function setRegion() {
+        Titanium.Geolocation.getCurrentPosition(function(e) {
+            $.mapview.region = {
+                latitude: e.coords.latitude,
+                longitude: e.coords.longitude,
+                latitudeDelta: .01,
+                longitudeDelta: .01
+            };
+            Titanium.Geolocation.reverseGeocoder(e.coords.latitude, e.coords.longitude, function(e2) {
+                if (e2.places.length > 0) {
+                    $.txtCity.setValue(e2.places[0].city);
+                    $.txtStreet.setValue(e2.places[0].street);
+                    serviceAgent.getCounty(e.coords.latitude, e.coords.longitude, function(res) {
+                        $.txtCounty.setValue(res);
+                    });
+                }
+            });
+        });
+    }
     function btnNext_onClick() {
         sr1Form.street = $.txtStreet.getValue();
         sr1Form.city = $.txtCity.getValue();
@@ -37,9 +55,9 @@ function Controller() {
         annotations: __alloyId24,
         id: "mapview",
         ns: Ti.Map,
-        width: "290dp",
-        height: "250dp",
-        top: "10dp",
+        width: "320dp",
+        height: "260dp",
+        top: "0dp",
         animate: "true",
         regionFit: "true",
         userLocation: "true",
@@ -142,6 +160,7 @@ function Controller() {
     $.__views.__alloyId23.add($.__views.__alloyId28);
     exports.destroy = function() {};
     _.extend($, $.__views);
+    var serviceAgent = require("serviceAgent");
     var sr1Form = {
         actors: []
     };

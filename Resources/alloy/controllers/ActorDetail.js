@@ -1,6 +1,36 @@
 function Controller() {
     function btnCaptureVin_onClick() {}
-    function btnCaptureDl_onClick() {}
+    function btnCaptureDl_onClick() {
+        var cameraOptions = getCameraOptions();
+        cameraOptions.success = function(e) {
+            var resizedImage = e.media.imageAsResized(e.media.width / $.imageScaleFactor, e.media.height / $.imageScaleFactor);
+            $.actor.dlBarcode = Ti.Utils.base64encode(resizedImage).toString();
+        };
+        Ti.Media.isCameraSupported ? Ti.Media.showCamera(cameraOptions) : Ti.Media.openPhotoGallery(cameraOptions);
+    }
+    function btnCaptureDlOwner_onClick() {
+        var cameraOptions = getCameraOptions();
+        cameraOptions.success = function(e) {
+            $.actor.dlBarcodeOwner = Ti.Utils.base64encode(e.media).toString();
+        };
+        Ti.Media.isCameraSupported ? Ti.Media.showCamera(cameraOptions) : Ti.Media.openPhotoGallery(cameraOptions);
+    }
+    function getCameraOptions() {
+        var cameraOptions = {
+            cancel: function() {},
+            error: function(error) {
+                var a = Ti.UI.createAlertDialog({
+                    title: "Camera Error"
+                });
+                error.code == Ti.Media.NO_CAMERA ? a.setMessage("MISSING CAMERA") : a.setMessage("Unexpected error: " + error.code);
+                a.show();
+            },
+            saveToPhotoGallery: true,
+            allowEditing: true,
+            mediaTypes: [ Ti.Media.MEDIA_TYPE_PHOTO ]
+        };
+        return cameraOptions;
+    }
     function txtActorType_onClick() {
         $.vActorType.setHeight("275dp");
     }
@@ -55,7 +85,6 @@ function Controller() {
         $.txtPlateState.setValue($.actor.plateState);
         "Add" == $.mode && $.btnDeleteActor.setVisible(false);
     }
-    function btnCaptureDlOwner_onClick() {}
     require("alloy/controllers/BaseController").apply(this, Array.prototype.slice.call(arguments));
     this.__controllerPath = "ActorDetail";
     arguments[0] ? arguments[0]["__parentSymbol"] : null;
@@ -79,7 +108,7 @@ function Controller() {
     });
     $.__views.winActorDetail.add($.__views.__alloyId0);
     $.__views.__alloyId1 = Ti.UI.createLabel({
-        top: "15dp",
+        top: "20dp",
         left: "15dp",
         color: "#acacac",
         font: {
@@ -112,7 +141,7 @@ function Controller() {
     });
     $.__views.__alloyId0.add($.__views.vActorType);
     $.__views.pActorType = Ti.UI.createPicker({
-        top: "10dp",
+        top: "15dp",
         id: "pActorType",
         selectionIndicator: "true",
         useSpinner: "true"
@@ -191,7 +220,7 @@ function Controller() {
             } ]
         },
         left: "15dp",
-        top: "10dp",
+        top: "15dp",
         id: "btnCaptureVin",
         title: "CAPTURE VIN"
     });
@@ -223,7 +252,7 @@ function Controller() {
     $.__views.__alloyId0.add($.__views.btnCaptureDl);
     btnCaptureDl_onClick ? $.__views.btnCaptureDl.addEventListener("click", btnCaptureDl_onClick) : __defers["$.__views.btnCaptureDl!click!btnCaptureDl_onClick"] = true;
     $.__views.__alloyId9 = Ti.UI.createLabel({
-        top: "15dp",
+        top: "20dp",
         left: "15dp",
         color: "#acacac",
         font: {
@@ -247,7 +276,7 @@ function Controller() {
     });
     $.__views.__alloyId0.add($.__views.txtPlateNum);
     $.__views.__alloyId10 = Ti.UI.createLabel({
-        top: "15dp",
+        top: "20dp",
         left: "15dp",
         color: "#acacac",
         font: {
@@ -272,7 +301,7 @@ function Controller() {
     });
     $.__views.__alloyId0.add($.__views.txtPlateState);
     $.__views.__alloyId11 = Ti.UI.createLabel({
-        top: "15dp",
+        top: "20dp",
         left: "15dp",
         color: "#acacac",
         font: {
@@ -326,7 +355,7 @@ function Controller() {
                 position: 1
             } ]
         },
-        top: "15dp",
+        top: "20dp",
         visible: false,
         id: "btnCaptureDlOwner",
         title: "CAPTURE DL - OWNER"
@@ -351,7 +380,7 @@ function Controller() {
                 position: 1
             } ]
         },
-        top: "20dp",
+        top: "15dp",
         id: "btnDeleteActor",
         title: "DELETE ACTOR"
     });
@@ -363,6 +392,7 @@ function Controller() {
     $.actor = args.actor;
     $.onCloseCb = args.onCloseCb;
     $.mode = args.mode;
+    $.imageScaleFactor = 8;
     setupView();
     __defers["$.__views.winActorDetail!close!winActorDetail_onClose"] && $.__views.winActorDetail.addEventListener("close", winActorDetail_onClose);
     __defers["$.__views.txtActorType!click!txtActorType_onClick"] && $.__views.txtActorType.addEventListener("click", txtActorType_onClick);

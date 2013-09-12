@@ -18,7 +18,7 @@ function Controller() {
     }
     function plusBtn_onClick() {
         var actor = {
-            actorType: "",
+            actorType: "Driver",
             vinImage: "",
             dlBarcode: "",
             plateNum: "",
@@ -128,7 +128,12 @@ function Controller() {
         Alloy.Globals.tabMain.open(actorDetailController.getView());
     }
     function btnSubmitSr1_onClick() {
+        var a = JSON.stringify($.sr1Form);
+        console.log(a);
         debugger;
+        serviceAgent.submitSr1Form($.sr1Form, function() {
+            debugger;
+        });
     }
     require("alloy/controllers/BaseController").apply(this, Array.prototype.slice.call(arguments));
     this.__controllerPath = "Actors";
@@ -186,6 +191,7 @@ function Controller() {
     btnSubmitSr1_onClick ? $.__views.__alloyId19.addEventListener("click", btnSubmitSr1_onClick) : __defers["$.__views.__alloyId19!click!btnSubmitSr1_onClick"] = true;
     exports.destroy = function() {};
     _.extend($, $.__views);
+    var serviceAgent = require("serviceAgent");
     var args = arguments[0] || {};
     $.sr1Form = args.sr1Form;
     setupView();

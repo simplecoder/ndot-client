@@ -1,8 +1,7 @@
 <Alloy>
 	<Window class="container" id='winLocation' title="Location">
 		<ScrollView layout="vertical">
-			<!-- <Label id="lblLocation" text="Location"></Label> -->
-			<View id="mapview" ns="Ti.Map" width="290dp" height="250dp" top="10dp" onComplete="setRegion"
+			<View id="mapview" ns="Ti.Map" width="320dp" height="260dp" top="0dp" onComplete="setRegion"
 	            animate="true" regionFit="true" userLocation="true"
 	            mapType="Ti.Map.STANDARD_TYPE" >
 	        </View>
