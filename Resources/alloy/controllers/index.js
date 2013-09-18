@@ -3,6 +3,7 @@ function Controller() {
         var locationController = Alloy.createController("Location");
         $.tabMain.open(locationController.getView());
     }
+    function btnHistory_onClick() {}
     require("alloy/controllers/BaseController").apply(this, Array.prototype.slice.call(arguments));
     this.__controllerPath = "index";
     arguments[0] ? arguments[0]["__parentSymbol"] : null;
@@ -21,20 +22,20 @@ function Controller() {
         tabBarHidden: "true",
         navBarHidden: "true"
     });
-    $.__views.__alloyId20 = Ti.UI.createView({
-        id: "__alloyId20"
+    $.__views.__alloyId17 = Ti.UI.createView({
+        id: "__alloyId17"
     });
-    $.__views.winHome.add($.__views.__alloyId20);
-    $.__views.__alloyId21 = Ti.UI.createImageView({
+    $.__views.winHome.add($.__views.__alloyId17);
+    $.__views.__alloyId18 = Ti.UI.createImageView({
         image: "/images/ndot-logo.png",
         width: "170dp",
         height: "79dp",
         left: "75dp",
         top: "60dp",
-        id: "__alloyId21"
+        id: "__alloyId18"
     });
-    $.__views.__alloyId20.add($.__views.__alloyId21);
-    $.__views.__alloyId22 = Ti.UI.createButton({
+    $.__views.__alloyId17.add($.__views.__alloyId18);
+    $.__views.__alloyId19 = Ti.UI.createButton({
         width: "250dp",
         height: "45dp",
         left: "35dp",
@@ -55,10 +56,35 @@ function Controller() {
             } ]
         },
         title: "BEGIN NEW SR1 FORM",
-        id: "__alloyId22"
+        id: "__alloyId19"
     });
-    $.__views.__alloyId20.add($.__views.__alloyId22);
-    btnBeginSr1_onClick ? $.__views.__alloyId22.addEventListener("click", btnBeginSr1_onClick) : __defers["$.__views.__alloyId22!click!btnBeginSr1_onClick"] = true;
+    $.__views.__alloyId17.add($.__views.__alloyId19);
+    btnBeginSr1_onClick ? $.__views.__alloyId19.addEventListener("click", btnBeginSr1_onClick) : __defers["$.__views.__alloyId19!click!btnBeginSr1_onClick"] = true;
+    $.__views.btnHistory = Ti.UI.createButton({
+        width: "250dp",
+        height: "45dp",
+        left: "35dp",
+        top: "240dp",
+        backgroundImage: "none",
+        color: "white",
+        font: {
+            fontWeight: "bold"
+        },
+        backgroundGradient: {
+            type: "linear",
+            colors: [ {
+                color: "#009848",
+                position: 0
+            }, {
+                color: "#00853f",
+                position: 1
+            } ]
+        },
+        id: "btnHistory",
+        title: "HISTORY"
+    });
+    $.__views.__alloyId17.add($.__views.btnHistory);
+    btnHistory_onClick ? $.__views.btnHistory.addEventListener("click", btnHistory_onClick) : __defers["$.__views.btnHistory!click!btnHistory_onClick"] = true;
     $.__views.tabMain = Ti.UI.createTab({
         window: $.__views.winHome,
         id: "tabMain"
@@ -70,7 +96,8 @@ function Controller() {
     Alloy.Globals.tgMain = $.tgMain;
     Alloy.Globals.tabMain = $.tabMain;
     $.tgMain.open();
-    __defers["$.__views.__alloyId22!click!btnBeginSr1_onClick"] && $.__views.__alloyId22.addEventListener("click", btnBeginSr1_onClick);
+    __defers["$.__views.__alloyId19!click!btnBeginSr1_onClick"] && $.__views.__alloyId19.addEventListener("click", btnBeginSr1_onClick);
+    __defers["$.__views.btnHistory!click!btnHistory_onClick"] && $.__views.btnHistory.addEventListener("click", btnHistory_onClick);
     _.extend($, exports);
 }
 

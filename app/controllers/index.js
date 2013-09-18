@@ -6,4 +6,8 @@ function btnBeginSr1_onClick(e){
     $.tabMain.open(locationController.getView());
 }
 
+function btnHistory_onClick(e){
+	
+}
+
 $.tgMain.open();

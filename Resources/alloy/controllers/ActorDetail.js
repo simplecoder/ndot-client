@@ -1,19 +1,66 @@
 function Controller() {
-    function btnCaptureVin_onClick() {}
+    function scannerStatusUpdatedHandler(data) {
+        if (data.newFoundBarcodes.length) {
+            Ti.Media.vibrate([ 0, 250 ]);
+            overlayView.animate({
+                backgroundColor: "#009848",
+                duration: 250
+            }, function() {
+                overlayView.backgroundColor = "transparent";
+            });
+            data.newFoundBarcodes.forEach(barcodeResultHandler);
+        }
+    }
+    function barcodeResultHandler(barcode) {
+        $.actor.vin = barcode.barcodeString;
+        RedLaser.doneScanning();
+        ("iphone" === Ti.Platform.osname || "ipad" === Ti.Platform.osname) && $.winActorDetail.remove(cameraPreview);
+    }
+    function btnCaptureVin_onClick() {
+        ("iphone" === Ti.Platform.osname || "ipad" === Ti.Platform.osname) && $.winActorDetail.add(cameraPreview);
+        RedLaser.startScanning({
+            overlay: overlayView,
+            orientation: RedLaser.PREF_ORIENTATION_PORTRAIT,
+            cameraPreview: cameraPreview,
+            cameraIndex: void 0
+        });
+    }
     function btnCaptureDl_onClick() {
         var cameraOptions = getCameraOptions();
         cameraOptions.success = function(e) {
-            var resizedImage = e.media.imageAsResized(e.media.width / $.imageScaleFactor, e.media.height / $.imageScaleFactor);
-            $.actor.dlBarcode = Ti.Utils.base64encode(resizedImage).toString();
+            $.actor.dlBarcode = Ti.Utils.base64encode(e.media).toString();
         };
-        Ti.Media.isCameraSupported ? Ti.Media.showCamera(cameraOptions) : Ti.Media.openPhotoGallery(cameraOptions);
+        if (Ti.Media.isCameraSupported) {
+            var dialog = Ti.UI.createOptionDialog({
+                cancel: 2,
+                options: [ "Camera", "Photo Gallery", "Cancel" ],
+                selectedIndex: 2,
+                title: "Use camera or photo gallery?"
+            });
+            dialog.addEventListener("click", function(e) {
+                0 == e.index ? Ti.Media.showCamera(cameraOptions) : 1 == e.index && Ti.Media.openPhotoGallery(cameraOptions);
+            });
+            dialog.show();
+        } else Ti.Media.openPhotoGallery(cameraOptions);
     }
     function btnCaptureDlOwner_onClick() {
         var cameraOptions = getCameraOptions();
         cameraOptions.success = function(e) {
-            $.actor.dlBarcodeOwner = Ti.Utils.base64encode(e.media).toString();
+            e.media.imageAsResized(e.media.width / $.imageScaleFactor, e.media.height / $.imageScaleFactor);
         };
-        Ti.Media.isCameraSupported ? Ti.Media.showCamera(cameraOptions) : Ti.Media.openPhotoGallery(cameraOptions);
+        if (Ti.Media.isCameraSupported) {
+            var dialog = Ti.UI.createOptionDialog({
+                cancel: 2,
+                options: [ "Camera", "Photo Gallery", "Cancel" ],
+                selectedIndex: 2,
+                destructive: 0,
+                title: "Use camera or photo gallery?"
+            });
+            dialog.addEventListener("click", function(e) {
+                0 == e.index ? Ti.Media.showCamera(cameraOptions) : 1 == e.index && Ti.Media.openPhotoGallery(cameraOptions);
+            });
+            dialog.show();
+        } else Ti.Media.openPhotoGallery(cameraOptions);
     }
     function getCameraOptions() {
         var cameraOptions = {
@@ -38,7 +85,24 @@ function Controller() {
         $.vActorType.setHeight(0);
     }
     function pActorType_onChange(e) {
-        $.txtActorType.setValue(e.selectedValue[0]);
+        var actorType = e.selectedValue[0];
+        $.txtActorType.setValue(actorType);
+        "Pedestrian" == actorType || "Pedal Cyclist" == actorType || "Other" == actorType ? toggleVehicleData(false) : ("Driver" == actorType || "Parked Vehicles" == actorType) && toggleVehicleData(true);
+    }
+    function toggleVehicleData(show) {
+        if (show) {
+            $.btnCaptureVin.height = "40dp";
+            $.btnCaptureVin.setVisible(true);
+            $.vVehicleData.setVisible(true);
+        } else {
+            $.btnCaptureVin.height = 0;
+            $.btnCaptureVin.setVisible(false);
+            $.vVehicleData.setVisible(false);
+            $.txtPlateNum.setValue("");
+            $.txtPlateState.setValue("");
+            $.actor.dlBarcode = "";
+            $.actor.dlBarcodeOwner = "";
+        }
     }
     function btnDeleteActor_onClick() {
         $.mode = "Delete";
@@ -60,7 +124,6 @@ function Controller() {
         }
     }
     function setupView() {
-        $.txtActorType.setValue($.actor.actorType);
         switch ($.actor.actorType) {
           case "Driver":
             $.pActorType.setSelectedRow(0, 0, true);
@@ -201,7 +264,7 @@ function Controller() {
     });
     $.__views.vActorType.add($.__views.btnClosePicker);
     btnClosePicker_onClick ? $.__views.btnClosePicker.addEventListener("click", btnClosePicker_onClick) : __defers["$.__views.btnClosePicker!click!btnClosePicker_onClick"] = true;
-    $.__views.btnCaptureVin = Ti.UI.createButton({
+    $.__views.btnCaptureDl = Ti.UI.createButton({
         width: "140dp",
         height: "40dp",
         backgroundImage: "none",
@@ -221,12 +284,12 @@ function Controller() {
         },
         left: "15dp",
         top: "15dp",
-        id: "btnCaptureVin",
-        title: "CAPTURE VIN"
+        id: "btnCaptureDl",
+        title: "CAPTURE DL"
     });
-    $.__views.__alloyId0.add($.__views.btnCaptureVin);
-    btnCaptureVin_onClick ? $.__views.btnCaptureVin.addEventListener("click", btnCaptureVin_onClick) : __defers["$.__views.btnCaptureVin!click!btnCaptureVin_onClick"] = true;
-    $.__views.btnCaptureDl = Ti.UI.createButton({
+    $.__views.__alloyId0.add($.__views.btnCaptureDl);
+    btnCaptureDl_onClick ? $.__views.btnCaptureDl.addEventListener("click", btnCaptureDl_onClick) : __defers["$.__views.btnCaptureDl!click!btnCaptureDl_onClick"] = true;
+    $.__views.btnCaptureVin = Ti.UI.createButton({
         width: "140dp",
         height: "40dp",
         backgroundImage: "none",
@@ -246,22 +309,27 @@ function Controller() {
         },
         right: "15dp",
         top: "-40dp",
-        id: "btnCaptureDl",
-        title: "CAPTURE DL"
+        id: "btnCaptureVin",
+        title: "CAPTURE VIN"
     });
-    $.__views.__alloyId0.add($.__views.btnCaptureDl);
-    btnCaptureDl_onClick ? $.__views.btnCaptureDl.addEventListener("click", btnCaptureDl_onClick) : __defers["$.__views.btnCaptureDl!click!btnCaptureDl_onClick"] = true;
-    $.__views.__alloyId9 = Ti.UI.createLabel({
+    $.__views.__alloyId0.add($.__views.btnCaptureVin);
+    btnCaptureVin_onClick ? $.__views.btnCaptureVin.addEventListener("click", btnCaptureVin_onClick) : __defers["$.__views.btnCaptureVin!click!btnCaptureVin_onClick"] = true;
+    $.__views.vVehicleData = Ti.UI.createView({
+        layout: "vertical",
+        id: "vVehicleData"
+    });
+    $.__views.__alloyId0.add($.__views.vVehicleData);
+    $.__views.lblPlateNum = Ti.UI.createLabel({
         top: "20dp",
         left: "15dp",
         color: "#acacac",
         font: {
             fontSize: "16dp"
         },
-        text: "Plate #",
-        id: "__alloyId9"
+        id: "lblPlateNum",
+        text: "Plate #"
     });
-    $.__views.__alloyId0.add($.__views.__alloyId9);
+    $.__views.vVehicleData.add($.__views.lblPlateNum);
     $.__views.txtPlateNum = Ti.UI.createTextField({
         top: "-25dp",
         right: "15dp",
@@ -274,18 +342,18 @@ function Controller() {
         height: "30dp",
         id: "txtPlateNum"
     });
-    $.__views.__alloyId0.add($.__views.txtPlateNum);
-    $.__views.__alloyId10 = Ti.UI.createLabel({
+    $.__views.vVehicleData.add($.__views.txtPlateNum);
+    $.__views.lblPlateState = Ti.UI.createLabel({
         top: "20dp",
         left: "15dp",
         color: "#acacac",
         font: {
             fontSize: "16dp"
         },
-        text: "Plate State",
-        id: "__alloyId10"
+        id: "lblPlateState",
+        text: "Plate State"
     });
-    $.__views.__alloyId0.add($.__views.__alloyId10);
+    $.__views.vVehicleData.add($.__views.lblPlateState);
     $.__views.txtPlateState = Ti.UI.createTextField({
         top: "-25dp",
         right: "15dp",
@@ -299,29 +367,29 @@ function Controller() {
         id: "txtPlateState",
         value: "NV"
     });
-    $.__views.__alloyId0.add($.__views.txtPlateState);
-    $.__views.__alloyId11 = Ti.UI.createLabel({
+    $.__views.vVehicleData.add($.__views.txtPlateState);
+    $.__views.lblOwnerDriver = Ti.UI.createLabel({
         top: "20dp",
         left: "15dp",
         color: "#acacac",
         font: {
             fontSize: "16dp"
         },
-        text: "Owner same as driver?",
-        id: "__alloyId11"
+        id: "lblOwnerDriver",
+        text: "Owner same as driver?"
     });
-    $.__views.__alloyId0.add($.__views.__alloyId11);
-    var __alloyId13 = [];
-    var __alloyId16 = {
+    $.__views.vVehicleData.add($.__views.lblOwnerDriver);
+    var __alloyId10 = [];
+    var __alloyId13 = {
         title: "YES",
         ns: "Alloy.Abstract"
     };
-    __alloyId13.push(__alloyId16);
-    var __alloyId17 = {
+    __alloyId10.push(__alloyId13);
+    var __alloyId14 = {
         title: "NO",
         ns: "Alloy.Abstract"
     };
-    __alloyId13.push(__alloyId17);
+    __alloyId10.push(__alloyId14);
     $.__views.tbOwnerDriver = Ti.UI.iOS.createTabbedBar({
         index: 0,
         backgroundColor: "#363636",
@@ -332,10 +400,10 @@ function Controller() {
         font: {
             fontSize: "14dp"
         },
-        labels: __alloyId13,
+        labels: __alloyId10,
         id: "tbOwnerDriver"
     });
-    $.__views.__alloyId0.add($.__views.tbOwnerDriver);
+    $.__views.vVehicleData.add($.__views.tbOwnerDriver);
     tbOwnerDriver_onClick ? $.__views.tbOwnerDriver.addEventListener("click", tbOwnerDriver_onClick) : __defers["$.__views.tbOwnerDriver!click!tbOwnerDriver_onClick"] = true;
     $.__views.btnCaptureDlOwner = Ti.UI.createButton({
         width: "290dp",
@@ -360,7 +428,7 @@ function Controller() {
         id: "btnCaptureDlOwner",
         title: "CAPTURE DL - OWNER"
     });
-    $.__views.__alloyId0.add($.__views.btnCaptureDlOwner);
+    $.__views.vVehicleData.add($.__views.btnCaptureDlOwner);
     btnCaptureDlOwner_onClick ? $.__views.btnCaptureDlOwner.addEventListener("click", btnCaptureDlOwner_onClick) : __defers["$.__views.btnCaptureDlOwner!click!btnCaptureDlOwner_onClick"] = true;
     $.__views.btnDeleteActor = Ti.UI.createButton({
         width: "280dp",
@@ -388,18 +456,73 @@ function Controller() {
     btnDeleteActor_onClick ? $.__views.btnDeleteActor.addEventListener("click", btnDeleteActor_onClick) : __defers["$.__views.btnDeleteActor!click!btnDeleteActor_onClick"] = true;
     exports.destroy = function() {};
     _.extend($, $.__views);
+    var RedLaser = require("ti.redlaser");
     var args = arguments[0] || {};
     $.actor = args.actor;
     $.onCloseCb = args.onCloseCb;
     $.mode = args.mode;
-    $.imageScaleFactor = 8;
+    $.imageScaleFactor = 4;
+    var cameraPreview = RedLaser.createCameraPreview({
+        width: "100%",
+        height: "100%",
+        orientationModes: [ Ti.UI.PORTRAIT ]
+    });
+    var torchButton = Ti.UI.createButton({
+        width: "30%",
+        height: "10%",
+        bottom: "3%",
+        left: "34%",
+        title: "Toggle torch"
+    });
+    torchButton.addEventListener("click", function() {
+        RedLaser.torchState = !RedLaser.torchState;
+    });
+    var overlayView = Ti.UI.createView({
+        borderColor: "blue",
+        borderWidth: 3
+    });
+    var btnCancelVinCapture = Ti.UI.createButton({
+        width: "30%",
+        height: "10%",
+        bottom: "3%",
+        left: "2%",
+        title: "Cancel"
+    });
+    btnCancelVinCapture.addEventListener("click", function() {
+        RedLaser.doneScanning();
+        ("iphone" === Ti.Platform.osname || "ipad" === Ti.Platform.osname) && $.winActorDetail.remove(cameraPreview);
+    });
+    overlayView.add(btnCancelVinCapture);
+    overlayView.add(torchButton);
+    RedLaser.addEventListener("scannerStatusUpdated", scannerStatusUpdatedHandler);
+    RedLaser.addEventListener("scannerReturnedResults", function(e) {
+        Ti.API.info("Received scannerReturnedResults event.");
+        e.foundBarcodes.forEach(barcodeResultHandler);
+    });
+    RedLaser.addEventListener("scannerActivated", function() {
+        if (RedLaser.isFlashAvailable) {
+            torchButton.enabled = true;
+            torchButton.title = "Toggle torch";
+        } else {
+            torchButton.enabled = false;
+            torchButton.title = "No torch";
+        }
+        RedLaser.scanSticky = false;
+        RedLaser.scanCodabar = false;
+        RedLaser.scanDataMatrix = false;
+        RedLaser.scanEan2 = false;
+        RedLaser.scanEan5 = false;
+        RedLaser.scanEan8 = false;
+        RedLaser.scanITF = false;
+        RedLaser.scanRSS14 = false;
+    });
     setupView();
     __defers["$.__views.winActorDetail!close!winActorDetail_onClose"] && $.__views.winActorDetail.addEventListener("close", winActorDetail_onClose);
     __defers["$.__views.txtActorType!click!txtActorType_onClick"] && $.__views.txtActorType.addEventListener("click", txtActorType_onClick);
     __defers["$.__views.pActorType!change!pActorType_onChange"] && $.__views.pActorType.addEventListener("change", pActorType_onChange);
     __defers["$.__views.btnClosePicker!click!btnClosePicker_onClick"] && $.__views.btnClosePicker.addEventListener("click", btnClosePicker_onClick);
-    __defers["$.__views.btnCaptureVin!click!btnCaptureVin_onClick"] && $.__views.btnCaptureVin.addEventListener("click", btnCaptureVin_onClick);
     __defers["$.__views.btnCaptureDl!click!btnCaptureDl_onClick"] && $.__views.btnCaptureDl.addEventListener("click", btnCaptureDl_onClick);
+    __defers["$.__views.btnCaptureVin!click!btnCaptureVin_onClick"] && $.__views.btnCaptureVin.addEventListener("click", btnCaptureVin_onClick);
     __defers["$.__views.tbOwnerDriver!click!tbOwnerDriver_onClick"] && $.__views.tbOwnerDriver.addEventListener("click", tbOwnerDriver_onClick);
     __defers["$.__views.btnCaptureDlOwner!click!btnCaptureDlOwner_onClick"] && $.__views.btnCaptureDlOwner.addEventListener("click", btnCaptureDlOwner_onClick);
     __defers["$.__views.btnDeleteActor!click!btnDeleteActor_onClick"] && $.__views.btnDeleteActor.addEventListener("click", btnDeleteActor_onClick);

@@ -37,7 +37,9 @@
         </splash>
         <theme>default</theme>
     </mobileweb>
-    <modules/>
+    <modules>
+        <module platform="iphone">ti.redlaser</module>
+    </modules>
     <deployment-targets>
         <target device="tizen">false</target>
         <target device="blackberry">false</target>

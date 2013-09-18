@@ -13,15 +13,14 @@ function setRegion(evt) {
             latitudeDelta:0.01,
              longitudeDelta:0.01
         };
-        Titanium.Geolocation.reverseGeocoder(e.coords.latitude,e.coords.longitude,function(e2){
-        	if (e2.places.length > 0){
-        		$.txtCity.setValue(e2.places[0].city);
-        		$.txtStreet.setValue(e2.places[0].street);
-        		serviceAgent.getCounty(e.coords.latitude, e.coords.longitude, function(res){
-        			$.txtCounty.setValue(res);
-        		});
+        
+        serviceAgent.getGoogleReverseGeo(e.coords.latitude, e.coords.longitude, function(res){
+        	if (res.results.length > 0){
+        		$.txtStreet.setValue(res.results[0].address_components[0].long_name + ' ' + res.results[0].address_components[1].short_name);
+        		$.txtCity.setValue(res.results[0].address_components[2].long_name);
+        		$.txtCounty.setValue(res.results[0].address_components[3].long_name);	
         	}
-        })
+		});
 	});	
 }
 

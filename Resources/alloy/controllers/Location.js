@@ -7,13 +7,11 @@ function Controller() {
                 latitudeDelta: .01,
                 longitudeDelta: .01
             };
-            Titanium.Geolocation.reverseGeocoder(e.coords.latitude, e.coords.longitude, function(e2) {
-                if (e2.places.length > 0) {
-                    $.txtCity.setValue(e2.places[0].city);
-                    $.txtStreet.setValue(e2.places[0].street);
-                    serviceAgent.getCounty(e.coords.latitude, e.coords.longitude, function(res) {
-                        $.txtCounty.setValue(res);
-                    });
+            serviceAgent.getGoogleReverseGeo(e.coords.latitude, e.coords.longitude, function(res) {
+                if (res.results.length > 0) {
+                    $.txtStreet.setValue(res.results[0].address_components[0].long_name + " " + res.results[0].address_components[1].short_name);
+                    $.txtCity.setValue(res.results[0].address_components[2].long_name);
+                    $.txtCounty.setValue(res.results[0].address_components[3].long_name);
                 }
             });
         });
@@ -45,14 +43,14 @@ function Controller() {
         title: "Location"
     });
     $.__views.winLocation && $.addTopLevelView($.__views.winLocation);
-    $.__views.__alloyId23 = Ti.UI.createScrollView({
+    $.__views.__alloyId20 = Ti.UI.createScrollView({
         layout: "vertical",
-        id: "__alloyId23"
+        id: "__alloyId20"
     });
-    $.__views.winLocation.add($.__views.__alloyId23);
-    var __alloyId24 = [];
+    $.__views.winLocation.add($.__views.__alloyId20);
+    var __alloyId21 = [];
     $.__views.mapview = Ti.Map.createView({
-        annotations: __alloyId24,
+        annotations: __alloyId21,
         id: "mapview",
         ns: Ti.Map,
         width: "320dp",
@@ -63,9 +61,9 @@ function Controller() {
         userLocation: "true",
         mapType: Ti.Map.STANDARD_TYPE
     });
-    $.__views.__alloyId23.add($.__views.mapview);
+    $.__views.__alloyId20.add($.__views.mapview);
     setRegion ? $.__views.mapview.addEventListener("complete", setRegion) : __defers["$.__views.mapview!complete!setRegion"] = true;
-    $.__views.__alloyId25 = Ti.UI.createLabel({
+    $.__views.__alloyId22 = Ti.UI.createLabel({
         color: "#acacac",
         font: {
             fontSize: "16dp"
@@ -73,9 +71,9 @@ function Controller() {
         top: "15dp",
         left: "15dp",
         text: "Street",
-        id: "__alloyId25"
+        id: "__alloyId22"
     });
-    $.__views.__alloyId23.add($.__views.__alloyId25);
+    $.__views.__alloyId20.add($.__views.__alloyId22);
     $.__views.txtStreet = Ti.UI.createTextField({
         top: "-25dp",
         right: "15dp",
@@ -88,8 +86,8 @@ function Controller() {
         height: "30dp",
         id: "txtStreet"
     });
-    $.__views.__alloyId23.add($.__views.txtStreet);
-    $.__views.__alloyId26 = Ti.UI.createLabel({
+    $.__views.__alloyId20.add($.__views.txtStreet);
+    $.__views.__alloyId23 = Ti.UI.createLabel({
         color: "#acacac",
         font: {
             fontSize: "16dp"
@@ -97,9 +95,9 @@ function Controller() {
         top: "15dp",
         left: "15dp",
         text: "City",
-        id: "__alloyId26"
+        id: "__alloyId23"
     });
-    $.__views.__alloyId23.add($.__views.__alloyId26);
+    $.__views.__alloyId20.add($.__views.__alloyId23);
     $.__views.txtCity = Ti.UI.createTextField({
         top: "-25dp",
         right: "15dp",
@@ -112,8 +110,8 @@ function Controller() {
         height: "30dp",
         id: "txtCity"
     });
-    $.__views.__alloyId23.add($.__views.txtCity);
-    $.__views.__alloyId27 = Ti.UI.createLabel({
+    $.__views.__alloyId20.add($.__views.txtCity);
+    $.__views.__alloyId24 = Ti.UI.createLabel({
         color: "#acacac",
         font: {
             fontSize: "16dp"
@@ -121,9 +119,9 @@ function Controller() {
         top: "15dp",
         left: "15dp",
         text: "County",
-        id: "__alloyId27"
+        id: "__alloyId24"
     });
-    $.__views.__alloyId23.add($.__views.__alloyId27);
+    $.__views.__alloyId20.add($.__views.__alloyId24);
     $.__views.txtCounty = Ti.UI.createTextField({
         top: "-25dp",
         right: "15dp",
@@ -136,7 +134,7 @@ function Controller() {
         height: "30dp",
         id: "txtCounty"
     });
-    $.__views.__alloyId23.add($.__views.txtCounty);
+    $.__views.__alloyId20.add($.__views.txtCounty);
     $.__views.btnNext = Ti.UI.createLabel({
         color: "#acacac",
         font: {
@@ -147,17 +145,17 @@ function Controller() {
         id: "btnNext",
         text: "Next >>"
     });
-    $.__views.__alloyId23.add($.__views.btnNext);
+    $.__views.__alloyId20.add($.__views.btnNext);
     btnNext_onClick ? $.__views.btnNext.addEventListener("click", btnNext_onClick) : __defers["$.__views.btnNext!click!btnNext_onClick"] = true;
-    $.__views.__alloyId28 = Ti.UI.createLabel({
+    $.__views.__alloyId25 = Ti.UI.createLabel({
         color: "#acacac",
         font: {
             fontSize: "16dp"
         },
         height: "20dp",
-        id: "__alloyId28"
+        id: "__alloyId25"
     });
-    $.__views.__alloyId23.add($.__views.__alloyId28);
+    $.__views.__alloyId20.add($.__views.__alloyId25);
     exports.destroy = function() {};
     _.extend($, $.__views);
     var serviceAgent = require("serviceAgent");

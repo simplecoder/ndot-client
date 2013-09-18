@@ -9,13 +9,13 @@
 }
 
 '#btnCaptureVin':{
-	left:'15dp',
-	top:"15dp"
+	right:'15dp',
+	top:"-40dp"
 }
 
 '#btnCaptureDl':{
-	right: '15dp',
-	top:"-40dp"
+	left: '15dp',
+	top:"15dp"
 }
 
 'Button':{
@@ -36,6 +36,10 @@
 	top: '0dp',
 	layout: 'vertical',
 	height: '0dp'
+}
+
+'#vVehicleData':{
+	layout: 'vertical'
 }
 
 '#pActorType':{

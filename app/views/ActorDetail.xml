@@ -15,20 +15,22 @@
 		        </Picker>
 		        <Button id="btnClosePicker" onClick="btnClosePicker_onClick" title="DONE" />
 			</View>
-			<Button id="btnCaptureVin" onClick="btnCaptureVin_onClick" title="CAPTURE VIN" />
 			<Button id="btnCaptureDl" onClick="btnCaptureDl_onClick" title="CAPTURE DL" />
-			<Label text="Plate #"></Label>
-			<TextField id='txtPlateNum'></TextField>
-			<Label text="Plate State"></Label>
-			<TextField id='txtPlateState' value="NV"></TextField>
-			<Label text="Owner same as driver?"></Label>
-			<TabbedBar id="tbOwnerDriver" platform="ios" onClick="tbOwnerDriver_onClick">
-	            <Labels>
-	                <Label>YES</Label>
-	                <Label>NO</Label>
-	            </Labels>
-	        </TabbedBar>
-	        <Button id="btnCaptureDlOwner" onClick="btnCaptureDlOwner_onClick" title="CAPTURE DL - OWNER" />
+			<Button id="btnCaptureVin" onClick="btnCaptureVin_onClick" title="CAPTURE VIN" />
+			<View id='vVehicleData'>
+				<Label id='lblPlateNum' text="Plate #"></Label>
+				<TextField id='txtPlateNum'></TextField>
+				<Label id='lblPlateState' text="Plate State"></Label>
+				<TextField id='txtPlateState' value="NV"></TextField>
+				<Label id='lblOwnerDriver' text="Owner same as driver?"></Label>
+				<TabbedBar id="tbOwnerDriver" platform="ios" onClick="tbOwnerDriver_onClick">
+		            <Labels>
+		                <Label>YES</Label>
+		                <Label>NO</Label>
+		            </Labels>
+		        </TabbedBar>
+		        <Button id="btnCaptureDlOwner" onClick="btnCaptureDlOwner_onClick" title="CAPTURE DL - OWNER" />
+	       </View>
 	        <Button id="btnDeleteActor" onClick="btnDeleteActor_onClick" title="DELETE ACTOR" />
 		</ScrollView>	
 	</Window>

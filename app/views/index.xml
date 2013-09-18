@@ -5,6 +5,7 @@
 				<View>	
 					<ImageView></ImageView>
 					<Button onClick="btnBeginSr1_onClick" title="BEGIN NEW SR1 FORM" />
+					<Button onClick="btnHistory_onClick" id='btnHistory' title="HISTORY" />
 				</View>
 			</Window>
 		</Tab>

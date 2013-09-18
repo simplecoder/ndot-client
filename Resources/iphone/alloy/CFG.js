@@ -1,4 +1,4 @@
 module.exports = {
     dependencies: {},
-    ApiBaseUri: "https://api-dev.southernnevadahealthdistricts.org/"
+    ApiBaseUri: "http://ndot.azurewebsites.net/api/"
 };

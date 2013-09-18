@@ -25,7 +25,7 @@ function setupView(){
 function plusBtn_onClick(){
 	var actor = {
 		actorType: 'Driver',
-		vinImage: '',
+		vin: '',
 		dlBarcode: '',
 		plateNum: '',
 		plateState:'NV',
@@ -139,11 +139,17 @@ function tvActors_onClick(e){
 }
 
 function btnSubmitSr1_onClick(){
-	var a = JSON.stringify($.sr1Form)
-	console.log(a);
-	debugger;
+	var dialog = Ti.UI.createAlertDialog({
+		    message: 'before submit',
+		    title: 'Submit SR1 Form'
+	  	});
+	  	dialog.show();
 	serviceAgent.submitSr1Form($.sr1Form, function(res, status){
-		debugger;
+		var dialog = Ti.UI.createAlertDialog({
+		    message: 'Done submit. status: ' + status + ' res: ' + res,
+		    title: 'Submit SR1 Form'
+	  	});
+	  	dialog.show();
 	});
 }
 

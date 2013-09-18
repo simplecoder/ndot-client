@@ -31,3 +31,7 @@
 		colors:[{color:'#009848',position:0.0},{color:'#00853f',position:1.0}]
 	}
 }
+
+'#btnHistory':{
+	top:"240dp"
+}

@@ -1,36 +1,160 @@
+var RedLaser = require("ti.redlaser");
+
 var args = arguments[0] || {};
 $.actor = args.actor;
 $.onCloseCb = args.onCloseCb;
 $.mode = args.mode;
-$.imageScaleFactor = 8;
+$.imageScaleFactor = 4;
+
+var cameraPreview = RedLaser.createCameraPreview({
+    width: '100%', 
+    height: '100%',
+    orientationModes: [Ti.UI.PORTRAIT]
+});
+
+var torchButton = Ti.UI.createButton({
+    width: '30%', height: '10%', bottom: '3%', left: '34%',
+    title: 'Toggle torch'
+});
+
+torchButton.addEventListener('click', function() {
+    RedLaser.torchState = !RedLaser.torchState;
+});
+
+var overlayView = Ti.UI.createView({
+    borderColor: 'blue', borderWidth: 3
+});
+
+var btnCancelVinCapture = Ti.UI.createButton({
+    width: '30%', height: '10%', bottom: '3%', left: '2%',
+    title: 'Cancel'
+});
+
+btnCancelVinCapture.addEventListener('click', function() {
+    RedLaser.doneScanning();
+    if (Ti.Platform.osname === 'iphone' || Ti.Platform.osname === 'ipad') {
+        $.winActorDetail.remove(cameraPreview);
+    }
+});
+
+overlayView.add(btnCancelVinCapture);
+overlayView.add(torchButton);
+
+RedLaser.addEventListener('scannerStatusUpdated', scannerStatusUpdatedHandler);
+RedLaser.addEventListener('scannerReturnedResults', function(e) {
+    // This event is iOS only.
+    Ti.API.info('Received scannerReturnedResults event.');
+    e.foundBarcodes.forEach(barcodeResultHandler);
+});
+
+function scannerStatusUpdatedHandler(data){
+	if (data.newFoundBarcodes.length) {
+        Ti.Media.vibrate([0, 250]);
+        overlayView.animate({ backgroundColor: '#009848', duration: 250}, function() {
+            overlayView.backgroundColor = 'transparent';
+        });
+        data.newFoundBarcodes.forEach(barcodeResultHandler);
+    }
+}
+
+function barcodeResultHandler(barcode){
+	$.actor.vin = barcode.barcodeString;
+	RedLaser.doneScanning();
+    if (Ti.Platform.osname === 'iphone' || Ti.Platform.osname === 'ipad') {
+        $.winActorDetail.remove(cameraPreview);
+    }
+}
+
+RedLaser.addEventListener('scannerActivated', function() {
+    if (RedLaser.isFlashAvailable) {
+        torchButton.enabled = true;
+        torchButton.title = 'Toggle torch';
+    } else {
+        torchButton.enabled = false;
+        torchButton.title = 'No torch';
+    }
+    
+    // All barcode types are enabled by default. 
+    // Turning some of them off can improve performance.
+    RedLaser.scanSticky = false;
+    RedLaser.scanCodabar = false;
+    // RedLaser.scanCode39 = false;
+    // RedLaser.scanCode93 = false;
+    RedLaser.scanDataMatrix = false;
+    RedLaser.scanEan2 = false;
+    RedLaser.scanEan5 = false;
+    RedLaser.scanEan8 = false;
+    RedLaser.scanITF = false;
+    RedLaser.scanRSS14 = false;
+    // RedLaser.scanSticky = false;
+});
 
 function btnCaptureVin_onClick(){
-  
+	if (Ti.Platform.osname === 'iphone' || Ti.Platform.osname === 'ipad') {
+        $.winActorDetail.add(cameraPreview);
+    }
+    RedLaser.startScanning({
+        overlay: overlayView,
+        orientation: RedLaser.PREF_ORIENTATION_PORTRAIT,
+        cameraPreview: cameraPreview,
+         cameraIndex: undefined
+    });
 }
 
 function btnCaptureDl_onClick(){
 	var cameraOptions = getCameraOptions();
 	cameraOptions.success = function(e) {
-    	var resizedImage = e.media.imageAsResized(e.media.width / $.imageScaleFactor, e.media.height / $.imageScaleFactor)
-        $.actor.dlBarcode = Ti.Utils.base64encode(resizedImage).toString();
-        //$.actor.dlBarcode = resizedImage.toString();
+    	// var resizedImage = e.media.imageAsResized(e.media.width / $.imageScaleFactor, e.media.height / $.imageScaleFactor)
+        // $.actor.dlBarcode = Ti.Utils.base64encode(resizedImage).toString();
+        // var a = Ti.Utils.base64decode($.actor.dlBarcode);
+        // console.log(a);
+        // debugger;
+        $.actor.dlBarcode = Ti.Utils.base64encode(e.media).toString();
     }
     if (Ti.Media.isCameraSupported) {
-        Ti.Media.showCamera(cameraOptions);
+    	var dialog = Ti.UI.createOptionDialog({
+			cancel: 2,
+			options: ['Camera', 'Photo Gallery', 'Cancel'],
+			selectedIndex: 2,
+			title: 'Use camera or photo gallery?'
+		});
+		dialog.addEventListener('click', function(e){
+			if (e.index == 0){
+				Ti.Media.showCamera(cameraOptions);		
+			}else if (e.index == 1){
+				Ti.Media.openPhotoGallery(cameraOptions);		
+			}
+		})
+    	dialog.show();
+        
     } else {
         Ti.Media.openPhotoGallery(cameraOptions);
-    }
+    }	
 }
 
 function btnCaptureDlOwner_onClick(){
 	var cameraOptions = getCameraOptions();
 	cameraOptions.success = function(e) {
-    	//var resizedImage = e.media.imageAsResized(e.media.width / $.imageScaleFactor, e.media.height / $.imageScaleFactor)
-        $.actor.dlBarcodeOwner = Ti.Utils.base64encode(e.media).toString();
-        //$.actor.dlBarcodeOwner = e.media.toString();
+    	var resizedImage = e.media.imageAsResized(e.media.width / $.imageScaleFactor, e.media.height / $.imageScaleFactor)
+        //$.actor.dlBarcodeOwner = Ti.Utils.base64encode(e.media).toString();
     }
     if (Ti.Media.isCameraSupported) {
-        Ti.Media.showCamera(cameraOptions);
+    	var dialog = Ti.UI.createOptionDialog({
+			cancel: 2,
+			options: ['Camera', 'Photo Gallery', 'Cancel'],
+			selectedIndex: 2,
+			destructive: 0,
+			title: 'Use camera or photo gallery?'
+		});
+		dialog.addEventListener('click', function(e){
+			if (e.index == 0){
+				Ti.Media.showCamera(cameraOptions);		
+			}else if (e.index == 1){
+				Ti.Media.openPhotoGallery(cameraOptions);		
+			}
+		})
+    	dialog.show();
+        
     } else {
         Ti.Media.openPhotoGallery(cameraOptions);
     }	
@@ -68,7 +192,44 @@ function btnClosePicker_onClick(){
 }
 
 function pActorType_onChange(e){
-	$.txtActorType.setValue(e.selectedValue[0]);
+	var actorType = e.selectedValue[0];
+	$.txtActorType.setValue(actorType);
+	if (actorType == 'Pedestrian' || actorType == 'Pedal Cyclist' || actorType=='Other'){
+		toggleVehicleData(false);
+		//toggleOwnerSameAsDriver(false);
+	}else if (actorType == 'Driver' || actorType == 'Parked Vehicles'){
+		toggleVehicleData(true);
+		//toggleOwnerSameAsDriver(true);
+	}
+}
+
+function toggleOwnerSameAsDriver(show){
+	if (show){
+		$.lblOwnerDriver.height = '16dp';
+		$.tbOwnerDriver.height = '25dp';
+		$.tbOwnerDriver.setVisible(true);
+	}
+	else{
+		$.lblOwnerDriver.height = 0;
+		$.tbOwnerDriver.height = 0;
+		$.tbOwnerDriver.setVisible(false);
+	}
+}
+
+function toggleVehicleData(show){
+	if(show){
+		$.btnCaptureVin.height = '40dp';
+		$.btnCaptureVin.setVisible(true);
+		$.vVehicleData.setVisible(true);	
+	}else{
+		$.btnCaptureVin.height = 0;
+		$.btnCaptureVin.setVisible(false);
+		$.vVehicleData.setVisible(false);
+		$.txtPlateNum.setValue('');
+		$.txtPlateState.setValue('');
+		$.actor.dlBarcode = '';
+		$.actor.dlBarcodeOwner = '';
+	}
 }
 
 function btnDeleteActor_onClick(){
@@ -94,7 +255,7 @@ function tbOwnerDriver_onClick(e){
 }
  		                
 function setupView(){
-	$.txtActorType.setValue($.actor.actorType);
+//	$.txtActorType.setValue($.actor.actorType);
 	switch ($.actor.actorType){
 		case 'Driver':
 			$.pActorType.setSelectedRow(0,0,true);
