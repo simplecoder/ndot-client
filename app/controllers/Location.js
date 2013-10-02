@@ -16,12 +16,52 @@ function setRegion(evt) {
         
         serviceAgent.getGoogleReverseGeo(e.coords.latitude, e.coords.longitude, function(res){
         	if (res.results.length > 0){
-        		$.txtStreet.setValue(res.results[0].address_components[0].long_name + ' ' + res.results[0].address_components[1].short_name);
-        		$.txtCity.setValue(res.results[0].address_components[2].long_name);
-        		$.txtCounty.setValue(res.results[0].address_components[3].long_name);	
+        		$.txtStreet.setValue(getStreetNumber(res.results[0].address_components) + ' ' + getStreet(res.results[0].address_components));
+        		$.txtCity.setValue(getCity(res.results[0].address_components));
+        		$.txtCounty.setValue(getCounty(res.results[0].address_components));	
         	}
 		});
 	});	
+}
+
+function getCounty(addrComponents){
+	for (var i=0;i<addrComponents.length;i++){
+		for (var j=0; j<addrComponents[i].types.length;j++){
+			if (addrComponents[i].types[j] == 'administrative_area_level_2'){
+				return addrComponents[i].long_name;
+			}
+		}
+	}
+}
+
+function getCity(addrComponents){
+	for (var i=0;i<addrComponents.length;i++){
+		for (var j=0; j<addrComponents[i].types.length;j++){
+			if (addrComponents[i].types[j] == 'locality'){
+				return addrComponents[i].long_name;
+			}
+		}
+	}
+}
+
+function getStreetNumber(addrComponents){
+	for (var i=0;i<addrComponents.length;i++){
+		for (var j=0; j<addrComponents[i].types.length;j++){
+			if (addrComponents[i].types[j] == 'street_number'){
+				return addrComponents[i].long_name;
+			}
+		}
+	}
+}
+
+function getStreet(addrComponents){
+	for (var i=0;i<addrComponents.length;i++){
+		for (var j=0; j<addrComponents[i].types.length;j++){
+			if (addrComponents[i].types[j] == 'route'){
+				return addrComponents[i].long_name;
+			}
+		}
+	}
 }
 
 function btnNext_onClick(){

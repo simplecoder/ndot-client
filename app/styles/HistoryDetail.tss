@@ -1,0 +1,20 @@
+
+".container" : {
+	backgroundImage: 'images/dark_fish_skin.png',
+	backgroundRepeat: 'true',
+	layout: 'vertical'
+}
+
+'#winHistoryDetail':{
+	navBarHidden: "false",
+	barColor: '#111'
+}
+
+'Label':{
+	left: '10dp',
+	top: '10dp',
+	color: '#acacac',
+	font:{
+		fontSize: '16dp'
+	}
+}

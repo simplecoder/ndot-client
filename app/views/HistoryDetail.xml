@@ -1,0 +1,10 @@
+<Alloy>
+	<Window id="winHistoryDetail" title="History Detail">
+		<ScrollView class="container" id='svMain'>
+			<Label id='lblStreet'></Label>
+			<Label id='lblCity'></Label>
+			<Label id='lblCounty'></Label>
+			<Label id='lblDate'></Label>
+		</ScrollView>
+	</Window>
+</Alloy>

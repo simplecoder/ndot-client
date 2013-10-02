@@ -1,0 +1,16 @@
+
+".container" : {
+	backgroundImage: 'images/dark_fish_skin.png',
+	backgroundRepeat: 'true'
+}
+
+'#winHistory':{
+	navBarHidden: "false",
+	barColor: '#111'
+}
+
+'TableView':{
+	top:'0dp',
+	backgroundColor: '#282828',
+	separatorColor: '#363636'
+}

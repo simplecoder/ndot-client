@@ -9,12 +9,24 @@ function Controller() {
             };
             serviceAgent.getGoogleReverseGeo(e.coords.latitude, e.coords.longitude, function(res) {
                 if (res.results.length > 0) {
-                    $.txtStreet.setValue(res.results[0].address_components[0].long_name + " " + res.results[0].address_components[1].short_name);
-                    $.txtCity.setValue(res.results[0].address_components[2].long_name);
-                    $.txtCounty.setValue(res.results[0].address_components[3].long_name);
+                    $.txtStreet.setValue(getStreetNumber(res.results[0].address_components) + " " + getStreet(res.results[0].address_components));
+                    $.txtCity.setValue(getCity(res.results[0].address_components));
+                    $.txtCounty.setValue(getCounty(res.results[0].address_components));
                 }
             });
         });
+    }
+    function getCounty(addrComponents) {
+        for (var i = 0; addrComponents.length > i; i++) for (var j = 0; addrComponents[i].types.length > j; j++) if ("administrative_area_level_2" == addrComponents[i].types[j]) return addrComponents[i].long_name;
+    }
+    function getCity(addrComponents) {
+        for (var i = 0; addrComponents.length > i; i++) for (var j = 0; addrComponents[i].types.length > j; j++) if ("locality" == addrComponents[i].types[j]) return addrComponents[i].long_name;
+    }
+    function getStreetNumber(addrComponents) {
+        for (var i = 0; addrComponents.length > i; i++) for (var j = 0; addrComponents[i].types.length > j; j++) if ("street_number" == addrComponents[i].types[j]) return addrComponents[i].long_name;
+    }
+    function getStreet(addrComponents) {
+        for (var i = 0; addrComponents.length > i; i++) for (var j = 0; addrComponents[i].types.length > j; j++) if ("route" == addrComponents[i].types[j]) return addrComponents[i].long_name;
     }
     function btnNext_onClick() {
         sr1Form.street = $.txtStreet.getValue();

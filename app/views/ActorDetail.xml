@@ -1,6 +1,7 @@
 <Alloy>
 	<Window id="winActorDetail" title="Actor Detail" onClose='winActorDetail_onClose'>
 		<ScrollView class="container">
+			
 			<Label text="Actor Type"></Label>
 			<TextField id='txtActorType' onClick="txtActorType_onClick"></TextField>
 			<View id="vActorType">
@@ -16,8 +17,10 @@
 		        <Button id="btnClosePicker" onClick="btnClosePicker_onClick" title="DONE" />
 			</View>
 			<Button id="btnCaptureDl" onClick="btnCaptureDl_onClick" title="CAPTURE DL" />
-			<Button id="btnCaptureVin" onClick="btnCaptureVin_onClick" title="CAPTURE VIN" />
+			<ImageView id="imgDlCheck" image="/images/check.png" />
 			<View id='vVehicleData'>
+				<Button id="btnCaptureVin" onClick="btnCaptureVin_onClick" title="CAPTURE VIN" />
+				<ImageView id="imgVinCheck" image="/images/check.png" />
 				<Label id='lblPlateNum' text="Plate #"></Label>
 				<TextField id='txtPlateNum'></TextField>
 				<Label id='lblPlateState' text="Plate State"></Label>
@@ -29,9 +32,10 @@
 		                <Label>NO</Label>
 		            </Labels>
 		        </TabbedBar>
-		        <Button id="btnCaptureDlOwner" onClick="btnCaptureDlOwner_onClick" title="CAPTURE DL - OWNER" />
+		        <Button id="btnCaptureDlOwner" onClick="btnCaptureDlOwner_onClick" title="CAPTURE OWNER DL" />
+		        <ImageView id="imgDlOwnerCheck" image="/images/check.png" />
 	       </View>
-	        <Button id="btnDeleteActor" onClick="btnDeleteActor_onClick" title="DELETE ACTOR" />
+	       <Button id="btnDeleteActor" onClick="btnDeleteActor_onClick" title="DELETE ACTOR" /> 
 		</ScrollView>	
 	</Window>
 </Alloy>

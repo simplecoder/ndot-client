@@ -1,12 +1,19 @@
+function getAuthHeader() {
+    var credentials = "foo:foofoo";
+    var authHeaderValue = "Basic " + Ti.Utils.base64encode(credentials);
+    return authHeaderValue;
+}
+
 exports.getSr1Form = function(cb) {
     var xhr = Ti.Network.createHTTPClient();
     xhr.open("GET", Alloy.CFG.ApiBaseUri + "sr1form");
+    xhr.setRequestHeader("Authorization", getAuthHeader());
     xhr.onload = function() {
         return cb(JSON.parse(this.responseText), this.status);
     };
     xhr.onerror = function(e) {
         console.log("Error in getSr1Form. Status Code: " + this.status + ", " + e.code + e.error);
-        Alloy.CFG.Debug ? cb(JSON.parse(getMockTimeCards()), this.status) : cb(null, this.status);
+        cb(null, this.status);
         return;
     };
     xhr.send();
@@ -16,6 +23,7 @@ exports.submitSr1Form = function(form, cb) {
     var xhr = Ti.Network.createHTTPClient();
     xhr.open("POST", Alloy.CFG.ApiBaseUri + "sr1form");
     xhr.setRequestHeader("Content-Type", "application/json");
+    xhr.timeout = 45e3;
     var payload = JSON.stringify(form);
     xhr.onload = function() {
         return cb(JSON.parse(this.responseText), this.status);

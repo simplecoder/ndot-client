@@ -23,7 +23,8 @@ function Controller() {
             dlBarcode: "",
             plateNum: "",
             plateState: "NV",
-            dlBarcodeOwner: ""
+            dlBarcodeOwner: "",
+            ownerSameAsDriver: true
         };
         $.sr1Form.actors.push(actor);
         var actorDetailController = Alloy.createController("ActorDetail", {

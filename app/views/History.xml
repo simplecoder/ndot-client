@@ -1,0 +1,7 @@
+<Alloy>
+	<Window id="winHistory" title="History" class="container">
+		<TableView id='tvHistory' onClick="tvHistory_onClick">
+			
+		</TableView>
+	</Window>
+</Alloy>

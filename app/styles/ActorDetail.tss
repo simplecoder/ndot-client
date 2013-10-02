@@ -8,19 +8,27 @@
 	barColor: '#111'
 }
 
-'#btnCaptureVin':{
-	right:'15dp',
-	top:"-40dp"
+'ImageView':{
+	top: '-35dp',
+	right: '45dp'
 }
 
-'#btnCaptureDl':{
-	left: '15dp',
-	top:"15dp"
+'#imgVinCheck':{
+	visible: false
+} 
+
+'#imgDlCheck':{
+	visible: false
+}
+
+'#imgDlOwnerCheck':{
+	visible: false
 }
 
 'Button':{
-	width:"140dp",
+	width:"250dp",
 	height:"40dp",
+	top: "15dp",
 	backgroundImage: 'none',
 	color: 'white',
 	font:{
@@ -39,7 +47,8 @@
 }
 
 '#vVehicleData':{
-	layout: 'vertical'
+	layout: 'vertical',
+	height: '240dp'
 }
 
 '#pActorType':{
@@ -93,8 +102,7 @@
 }
 
 '#btnDeleteActor':{
-	top: '15dp',
-	width: '280dp',
+	bottom: '20dp',
 	backgroundGradient:{
 		type:'linear',
 		colors:[{color:'#d01211',position:0.0},{color:'#b31111',position:1.0}]
@@ -103,7 +111,11 @@
 
 '#btnCaptureDlOwner':{
 	top: '20dp',
-	width: '290dp',
 	height: 0,
 	visible: false
 }
+
+'#txtPlateNum':{
+	autocapitalization: Ti.UI.TEXT_AUTOCAPITALIZATION_ALL
+}
+

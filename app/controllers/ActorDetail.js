@@ -58,6 +58,7 @@ function scannerStatusUpdatedHandler(data){
 }
 
 function barcodeResultHandler(barcode){
+	$.imgVinCheck.setVisible(true);
 	$.actor.vin = barcode.barcodeString;
 	RedLaser.doneScanning();
     if (Ti.Platform.osname === 'iphone' || Ti.Platform.osname === 'ipad') {
@@ -74,8 +75,6 @@ RedLaser.addEventListener('scannerActivated', function() {
         torchButton.title = 'No torch';
     }
     
-    // All barcode types are enabled by default. 
-    // Turning some of them off can improve performance.
     RedLaser.scanSticky = false;
     RedLaser.scanCodabar = false;
     // RedLaser.scanCode39 = false;
@@ -109,6 +108,7 @@ function btnCaptureDl_onClick(){
         // var a = Ti.Utils.base64decode($.actor.dlBarcode);
         // console.log(a);
         // debugger;
+        $.imgDlCheck.setVisible(true);
         $.actor.dlBarcode = Ti.Utils.base64encode(e.media).toString();
     }
     if (Ti.Media.isCameraSupported) {
@@ -135,8 +135,8 @@ function btnCaptureDl_onClick(){
 function btnCaptureDlOwner_onClick(){
 	var cameraOptions = getCameraOptions();
 	cameraOptions.success = function(e) {
-    	var resizedImage = e.media.imageAsResized(e.media.width / $.imageScaleFactor, e.media.height / $.imageScaleFactor)
-        //$.actor.dlBarcodeOwner = Ti.Utils.base64encode(e.media).toString();
+		$.imgDlOwnerCheck.setVisible(true);
+        $.actor.dlBarcodeOwner = Ti.Utils.base64encode(e.media).toString();
     }
     if (Ti.Media.isCameraSupported) {
     	var dialog = Ti.UI.createOptionDialog({
@@ -196,23 +196,8 @@ function pActorType_onChange(e){
 	$.txtActorType.setValue(actorType);
 	if (actorType == 'Pedestrian' || actorType == 'Pedal Cyclist' || actorType=='Other'){
 		toggleVehicleData(false);
-		//toggleOwnerSameAsDriver(false);
 	}else if (actorType == 'Driver' || actorType == 'Parked Vehicles'){
 		toggleVehicleData(true);
-		//toggleOwnerSameAsDriver(true);
-	}
-}
-
-function toggleOwnerSameAsDriver(show){
-	if (show){
-		$.lblOwnerDriver.height = '16dp';
-		$.tbOwnerDriver.height = '25dp';
-		$.tbOwnerDriver.setVisible(true);
-	}
-	else{
-		$.lblOwnerDriver.height = 0;
-		$.tbOwnerDriver.height = 0;
-		$.tbOwnerDriver.setVisible(false);
 	}
 }
 
@@ -248,14 +233,15 @@ function tbOwnerDriver_onClick(e){
 	if (e.index == 1){ // driver and owner not the same
 		$.btnCaptureDlOwner.setHeight('40dp');
 		$.btnCaptureDlOwner.setVisible(true);
+		$.actor.ownerSameAsDriver = false;
 	}else{
 		$.btnCaptureDlOwner.setHeight(0);
 		$.btnCaptureDlOwner.setVisible(false);
+		$.actor.ownerSameAsDriver = true;
 	}
 }
  		                
 function setupView(){
-//	$.txtActorType.setValue($.actor.actorType);
 	switch ($.actor.actorType){
 		case 'Driver':
 			$.pActorType.setSelectedRow(0,0,true);
@@ -277,6 +263,20 @@ function setupView(){
 	$.txtPlateState.setValue($.actor.plateState);
 	if ($.mode == 'Add'){
 		$.btnDeleteActor.setVisible(false);
+	}else{
+		$.btnDeleteActor.setVisible(true);
+	}
+	
+	if ($.actor.vin != '')
+		$.imgVinCheck.setVisible(true);
+	if ($.actor.dlBarcode != '')
+		$.imgDlCheck.setVisible(true);
+	if ($.actor.dlBarcodeOwner != '')
+		$.imgDlOwnerCheck.setVisible(true);
+	if ($.actor.ownerSameAsDriver == false){
+		$.btnCaptureDlOwner.setHeight('40dp');
+		$.btnCaptureDlOwner.setVisible(true);
+		$.tbOwnerDriver.setIndex(1);	
 	}
 }
 

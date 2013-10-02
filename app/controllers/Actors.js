@@ -29,7 +29,8 @@ function plusBtn_onClick(){
 		dlBarcode: '',
 		plateNum: '',
 		plateState:'NV',
-		dlBarcodeOwner: ''
+		dlBarcodeOwner: '',
+		ownerSameAsDriver: true
 	}
 	$.sr1Form.actors.push(actor);
 	var actorDetailController = Alloy.createController('ActorDetail',{
@@ -132,7 +133,7 @@ function tvActors_onClick(e){
 	var actor = $.sr1Form.actors[e.index];
 	var actorDetailController = Alloy.createController('ActorDetail',{
 		actor: actor,
-		onCloseCb: ActorDetail_onClose	,
+		onCloseCb: ActorDetail_onClose,
 		mode: 'Edit'
 	}); 
     Alloy.Globals.tabMain.open(actorDetailController.getView());

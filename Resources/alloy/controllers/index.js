@@ -3,7 +3,15 @@ function Controller() {
         var locationController = Alloy.createController("Location");
         $.tabMain.open(locationController.getView());
     }
-    function btnHistory_onClick() {}
+    function btnHistory_onClick() {
+        serviceAgent.getSr1Form(loadHistoryCb);
+    }
+    function loadHistoryCb(res) {
+        var historyController = Alloy.createController("History", {
+            forms: res
+        });
+        $.tabMain.open(historyController.getView());
+    }
     require("alloy/controllers/BaseController").apply(this, Array.prototype.slice.call(arguments));
     this.__controllerPath = "index";
     arguments[0] ? arguments[0]["__parentSymbol"] : null;
@@ -95,6 +103,7 @@ function Controller() {
     _.extend($, $.__views);
     Alloy.Globals.tgMain = $.tgMain;
     Alloy.Globals.tabMain = $.tabMain;
+    var serviceAgent = require("serviceAgent");
     $.tgMain.open();
     __defers["$.__views.__alloyId19!click!btnBeginSr1_onClick"] && $.__views.__alloyId19.addEventListener("click", btnBeginSr1_onClick);
     __defers["$.__views.btnHistory!click!btnHistory_onClick"] && $.__views.btnHistory.addEventListener("click", btnHistory_onClick);
