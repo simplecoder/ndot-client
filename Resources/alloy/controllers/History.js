@@ -1,5 +1,10 @@
 function Controller() {
     function setupView() {
+        var titleLabel = Ti.UI.createLabel({
+            text: "History",
+            color: "#fff"
+        });
+        $.winHistory.titleControl = titleLabel;
         for (var i = 0; $.forms.length > i; i++) {
             var row = historyTableRowFactory($.forms[i]);
             $.tvHistory.appendRow(row);
@@ -26,7 +31,7 @@ function Controller() {
             left: "10dp"
         });
         var lblDate = Ti.UI.createLabel({
-            text: moment($.form.CreatedDate).format("L"),
+            text: moment(form.CreatedDate).format("LLL"),
             color: "white",
             top: "28dp",
             font: {
@@ -47,6 +52,7 @@ function Controller() {
     var exports = {};
     var __defers = {};
     $.__views.winHistory = Ti.UI.createWindow({
+        statusBarStyle: Titanium.UI.iPhone.StatusBar.LIGHT_CONTENT,
         backgroundImage: "images/dark_fish_skin.png",
         backgroundRepeat: "true",
         navBarHidden: "false",

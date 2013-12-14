@@ -24,26 +24,27 @@ function Controller() {
         id: "tgMain"
     });
     $.__views.winHome = Ti.UI.createWindow({
+        statusBarStyle: Titanium.UI.iPhone.StatusBar.LIGHT_CONTENT,
         backgroundImage: "images/dark_fish_skin.png",
         backgroundRepeat: "true",
         id: "winHome",
         tabBarHidden: "true",
         navBarHidden: "true"
     });
-    $.__views.__alloyId17 = Ti.UI.createView({
-        id: "__alloyId17"
+    $.__views.__alloyId26 = Ti.UI.createView({
+        id: "__alloyId26"
     });
-    $.__views.winHome.add($.__views.__alloyId17);
-    $.__views.__alloyId18 = Ti.UI.createImageView({
+    $.__views.winHome.add($.__views.__alloyId26);
+    $.__views.__alloyId27 = Ti.UI.createImageView({
         image: "/images/ndot-logo.png",
         width: "170dp",
         height: "79dp",
         left: "75dp",
         top: "60dp",
-        id: "__alloyId18"
+        id: "__alloyId27"
     });
-    $.__views.__alloyId17.add($.__views.__alloyId18);
-    $.__views.__alloyId19 = Ti.UI.createButton({
+    $.__views.__alloyId26.add($.__views.__alloyId27);
+    $.__views.__alloyId28 = Ti.UI.createButton({
         width: "250dp",
         height: "45dp",
         left: "35dp",
@@ -64,10 +65,10 @@ function Controller() {
             } ]
         },
         title: "BEGIN NEW SR1 FORM",
-        id: "__alloyId19"
+        id: "__alloyId28"
     });
-    $.__views.__alloyId17.add($.__views.__alloyId19);
-    btnBeginSr1_onClick ? $.__views.__alloyId19.addEventListener("click", btnBeginSr1_onClick) : __defers["$.__views.__alloyId19!click!btnBeginSr1_onClick"] = true;
+    $.__views.__alloyId26.add($.__views.__alloyId28);
+    btnBeginSr1_onClick ? $.__views.__alloyId28.addEventListener("click", btnBeginSr1_onClick) : __defers["$.__views.__alloyId28!click!btnBeginSr1_onClick"] = true;
     $.__views.btnHistory = Ti.UI.createButton({
         width: "250dp",
         height: "45dp",
@@ -91,7 +92,7 @@ function Controller() {
         id: "btnHistory",
         title: "HISTORY"
     });
-    $.__views.__alloyId17.add($.__views.btnHistory);
+    $.__views.__alloyId26.add($.__views.btnHistory);
     btnHistory_onClick ? $.__views.btnHistory.addEventListener("click", btnHistory_onClick) : __defers["$.__views.btnHistory!click!btnHistory_onClick"] = true;
     $.__views.tabMain = Ti.UI.createTab({
         window: $.__views.winHome,
@@ -105,7 +106,7 @@ function Controller() {
     Alloy.Globals.tabMain = $.tabMain;
     var serviceAgent = require("serviceAgent");
     $.tgMain.open();
-    __defers["$.__views.__alloyId19!click!btnBeginSr1_onClick"] && $.__views.__alloyId19.addEventListener("click", btnBeginSr1_onClick);
+    __defers["$.__views.__alloyId28!click!btnBeginSr1_onClick"] && $.__views.__alloyId28.addEventListener("click", btnBeginSr1_onClick);
     __defers["$.__views.btnHistory!click!btnHistory_onClick"] && $.__views.btnHistory.addEventListener("click", btnHistory_onClick);
     _.extend($, exports);
 }

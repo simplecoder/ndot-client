@@ -1,3 +1,7 @@
+'Window[platform=ios]':{
+	statusBarStyle: Titanium.UI.iPhone.StatusBar.LIGHT_CONTENT
+}
+
 ".container": {
 	backgroundImage: 'images/dark_fish_skin.png',
 	backgroundRepeat: 'true'

@@ -1,0 +1,22 @@
+<Alloy>
+	<Window id="winActorDlOverride" title="Override" onClose='winActorDlOverride_onClose'>
+		<ScrollView class="container">
+			<Label text="First Name"></Label>
+	        <TextField id='txtFirstName'></TextField>
+	        <Label text="Middle Name"></Label>
+	        <TextField id='txtMiddleName'></TextField>
+	        <Label text="Last Name"></Label>
+	        <TextField id='txtLastName'></TextField>
+	        <Label text="Street"></Label>
+	        <TextField id='txtStreet'></TextField>
+	        <Label text="City"></Label>
+	        <TextField id='txtCity'></TextField>
+	        <Label text="State"></Label>
+	        <TextField id='txtState'></TextField>
+	        <Label text="Zip"></Label>
+	        <TextField id='txtZip'></TextField>
+	        <Label text="DOB"></Label>
+	        <TextField id='txtDob'></TextField>
+		</ScrollView>
+	</Window>
+</Alloy>

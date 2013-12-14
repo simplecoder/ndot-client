@@ -4,6 +4,13 @@ var args = arguments[0] || {};
 $.sr1Form = args.sr1Form;
 
 function setupView(){
+	// hack to set the color of the title 
+	var titleLabel = Ti.UI.createLabel({
+		text:'Actor Detail',
+		color:'#fff'
+	});	
+	$.winActors.titleControl = titleLabel;
+	
 	var plusBtn = Titanium.UI.createButton({
 		top: 0,
 		width: '30dp',
@@ -31,7 +38,7 @@ function plusBtn_onClick(){
 		plateState:'NV',
 		dlBarcodeOwner: '',
 		ownerSameAsDriver: true
-	}
+	};
 	$.sr1Form.actors.push(actor);
 	var actorDetailController = Alloy.createController('ActorDetail',{
 		actor: actor,
@@ -66,19 +73,19 @@ function getSymbolCharForActorType(actor){
 	var lblActorTypeChar = '';
 	switch (actor.actorType){
     	case 'Driver':
-    		lblActorTypeChar = 'D'
+    		lblActorTypeChar = 'D';
     		break;
 		case 'Pedestrian':
-			lblActorTypeChar = 'P'
+			lblActorTypeChar = 'P';
 			break;
 		case 'Parked Vehicles':
-			lblActorTypeChar = 'V'
+			lblActorTypeChar = 'V';
 			break;
 		case 'Pedal Cyclist':
-			lblActorTypeChar = 'C'
+			lblActorTypeChar = 'C';
 			break;
 		case 'Other':
-			lblActorTypeChar = 'O'
+			lblActorTypeChar = 'O';
 			break;
     }
     return lblActorTypeChar;
@@ -140,11 +147,6 @@ function tvActors_onClick(e){
 }
 
 function btnSubmitSr1_onClick(){
-	var dialog = Ti.UI.createAlertDialog({
-		    message: 'before submit',
-		    title: 'Submit SR1 Form'
-	  	});
-	  	dialog.show();
 	serviceAgent.submitSr1Form($.sr1Form, function(res, status){
 		var dialog = Ti.UI.createAlertDialog({
 		    message: 'Done submit. status: ' + status + ' res: ' + res,

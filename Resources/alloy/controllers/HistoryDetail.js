@@ -15,6 +15,11 @@ function Controller() {
         $.svMain.add(lbl);
     }
     function setupView() {
+        var titleLabel = Ti.UI.createLabel({
+            text: "History Detail",
+            color: "#fff"
+        });
+        $.winHistoryDetail.titleControl = titleLabel;
         $.lblStreet.setText("Street: " + $.form.Street);
         $.lblCity.setText("City: " + $.form.City);
         $.lblCounty.setText("County: " + $.form.County);
@@ -65,6 +70,7 @@ function Controller() {
     var $ = this;
     var exports = {};
     $.__views.winHistoryDetail = Ti.UI.createWindow({
+        statusBarStyle: Titanium.UI.iPhone.StatusBar.LIGHT_CONTENT,
         navBarHidden: "false",
         barColor: "#111",
         id: "winHistoryDetail",

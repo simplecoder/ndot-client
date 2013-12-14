@@ -13,7 +13,9 @@ function Controller() {
     }
     function barcodeResultHandler(barcode) {
         $.imgVinCheck.setVisible(true);
-        $.actor.vin = barcode.barcodeString;
+        $.actor.vin = "I" == barcode.barcodeString.charAt(0) || "i" == barcode.barcodeString.charAt(0) ? barcode.barcodeString.substring(1) : barcode.barcodeString;
+        alert($.actor.vin);
+        RedLaser.removeEventListener("scannerStatusUpdated", scannerStatusUpdatedHandler);
         RedLaser.doneScanning();
         ("iphone" === Ti.Platform.osname || "ipad" === Ti.Platform.osname) && $.winActorDetail.remove(cameraPreview);
     }
@@ -26,11 +28,25 @@ function Controller() {
             cameraIndex: void 0
         });
     }
+    function showNotif(msg) {
+        $.lblNotif.text = msg;
+        $.lblNotif.height = "30dp", $.lblNotif.visible = true;
+    }
+    function hideNotif() {
+        $.lblNotif.height = "0dp", $.lblNotif.visible = false;
+    }
     function btnCaptureDl_onClick() {
         var cameraOptions = getCameraOptions();
         cameraOptions.success = function(e) {
-            $.imgDlCheck.setVisible(true);
-            $.actor.dlBarcode = Ti.Utils.base64encode(e.media).toString();
+            var resizedImage = e.media.imageAsResized(e.media.width / $.imageScaleFactor, e.media.height / $.imageScaleFactor);
+            $.actor.dlBarcode = Ti.Utils.base64encode(resizedImage).toString();
+            $.actor.dlOverride = false;
+            showNotif("VALIDATING DRIVER LICENSE");
+            serviceAgent.checkDlImageValid($.actor.dlBarcode, function(res) {
+                $.actor.dlBarCodeValid = res;
+                setDlStatusImage();
+                hideNotif();
+            });
         };
         if (Ti.Media.isCameraSupported) {
             var dialog = Ti.UI.createOptionDialog({
@@ -40,7 +56,10 @@ function Controller() {
                 title: "Use camera or photo gallery?"
             });
             dialog.addEventListener("click", function(e) {
-                0 == e.index ? Ti.Media.showCamera(cameraOptions) : 1 == e.index && Ti.Media.openPhotoGallery(cameraOptions);
+                if (0 == e.index) Ti.Media.showCamera(cameraOptions); else if (1 == e.index) {
+                    cameraOptions.saveToPhotoGallery = false;
+                    Ti.Media.openPhotoGallery(cameraOptions);
+                }
             });
             dialog.show();
         } else Ti.Media.openPhotoGallery(cameraOptions);
@@ -128,7 +147,22 @@ function Controller() {
             $.actor.ownerSameAsDriver = true;
         }
     }
+    function setDlStatusImage() {
+        $.imgDlStatus.image = image = $.actor.dlBarCodeValid ? "/images/check.png" : "/images/warn.png";
+        $.imgDlStatus.setVisible(true);
+    }
+    function imgOverride_onClick() {
+        var actorDlOverrideController = Alloy.createController("ActorDlOverride", {
+            actor: $.actor
+        });
+        Alloy.Globals.tabMain.open(actorDlOverrideController.getView());
+    }
     function setupView() {
+        var titleLabel = Ti.UI.createLabel({
+            text: "Actor Detail",
+            color: "#fff"
+        });
+        $.winActorDetail.titleControl = titleLabel;
         switch ($.actor.actorType) {
           case "Driver":
             $.pActorType.setSelectedRow(0, 0, true);
@@ -153,7 +187,7 @@ function Controller() {
         $.txtPlateState.setValue($.actor.plateState);
         "Add" == $.mode ? $.btnDeleteActor.setVisible(false) : $.btnDeleteActor.setVisible(true);
         "" != $.actor.vin && $.imgVinCheck.setVisible(true);
-        "" != $.actor.dlBarcode && $.imgDlCheck.setVisible(true);
+        "" != $.actor.dlBarcode && setDlStatusImage();
         "" != $.actor.dlBarcodeOwner && $.imgDlOwnerCheck.setVisible(true);
         if (false == $.actor.ownerSameAsDriver) {
             $.btnCaptureDlOwner.setHeight("40dp");
@@ -170,6 +204,7 @@ function Controller() {
     var exports = {};
     var __defers = {};
     $.__views.winActorDetail = Ti.UI.createWindow({
+        statusBarStyle: Titanium.UI.iPhone.StatusBar.LIGHT_CONTENT,
         barColor: "#111",
         id: "winActorDetail",
         title: "Actor Detail"
@@ -183,6 +218,22 @@ function Controller() {
         id: "__alloyId0"
     });
     $.__views.winActorDetail.add($.__views.__alloyId0);
+    $.__views.lblNotif = Ti.UI.createLabel({
+        top: "0dp",
+        left: "0dp",
+        color: "#fff",
+        font: {
+            fontSize: "13dp"
+        },
+        height: "0dp",
+        backgroundColor: "#dead18",
+        textAlign: Ti.UI.TEXT_ALIGNMENT_CENTER,
+        visible: false,
+        width: Ti.UI.FILL,
+        id: "lblNotif",
+        text: " "
+    });
+    $.__views.__alloyId0.add($.__views.lblNotif);
     $.__views.__alloyId1 = Ti.UI.createLabel({
         top: "20dp",
         left: "15dp",
@@ -278,7 +329,7 @@ function Controller() {
     $.__views.vActorType.add($.__views.btnClosePicker);
     btnClosePicker_onClick ? $.__views.btnClosePicker.addEventListener("click", btnClosePicker_onClick) : __defers["$.__views.btnClosePicker!click!btnClosePicker_onClick"] = true;
     $.__views.btnCaptureDl = Ti.UI.createButton({
-        width: "250dp",
+        width: "210dp",
         height: "40dp",
         top: "15dp",
         backgroundImage: "none",
@@ -296,19 +347,31 @@ function Controller() {
                 position: 1
             } ]
         },
+        right: "35dp",
         id: "btnCaptureDl",
         title: "CAPTURE DL"
     });
     $.__views.__alloyId0.add($.__views.btnCaptureDl);
     btnCaptureDl_onClick ? $.__views.btnCaptureDl.addEventListener("click", btnCaptureDl_onClick) : __defers["$.__views.btnCaptureDl!click!btnCaptureDl_onClick"] = true;
-    $.__views.imgDlCheck = Ti.UI.createImageView({
+    $.__views.imgOverride = Ti.UI.createImageView({
+        top: "-40dp",
+        right: "45dp",
+        height: "40dp",
+        width: "40dp",
+        left: "35dp",
+        id: "imgOverride",
+        image: "/images/override.png"
+    });
+    $.__views.__alloyId0.add($.__views.imgOverride);
+    imgOverride_onClick ? $.__views.imgOverride.addEventListener("click", imgOverride_onClick) : __defers["$.__views.imgOverride!click!imgOverride_onClick"] = true;
+    $.__views.imgDlStatus = Ti.UI.createImageView({
         top: "-35dp",
         right: "45dp",
+        height: "30dp",
         visible: false,
-        id: "imgDlCheck",
-        image: "/images/check.png"
+        id: "imgDlStatus"
     });
-    $.__views.__alloyId0.add($.__views.imgDlCheck);
+    $.__views.__alloyId0.add($.__views.imgDlStatus);
     $.__views.vVehicleData = Ti.UI.createView({
         layout: "vertical",
         height: "240dp",
@@ -421,7 +484,7 @@ function Controller() {
     __alloyId10.push(__alloyId14);
     $.__views.tbOwnerDriver = Ti.UI.iOS.createTabbedBar({
         index: 0,
-        backgroundColor: "#363636",
+        backgroundColor: "#009848",
         top: "-24dp",
         right: "20dp",
         height: "25dp",
@@ -495,11 +558,13 @@ function Controller() {
     exports.destroy = function() {};
     _.extend($, $.__views);
     var RedLaser = require("ti.redlaser");
+    var serviceAgent = require("serviceAgent");
+    require("camera_overlay");
     var args = arguments[0] || {};
     $.actor = args.actor;
     $.onCloseCb = args.onCloseCb;
     $.mode = args.mode;
-    $.imageScaleFactor = 4;
+    $.imageScaleFactor = 2;
     var cameraPreview = RedLaser.createCameraPreview({
         width: "100%",
         height: "100%",
@@ -527,16 +592,13 @@ function Controller() {
         title: "Cancel"
     });
     btnCancelVinCapture.addEventListener("click", function() {
+        RedLaser.removeEventListener("scannerStatusUpdated", scannerStatusUpdatedHandler);
         RedLaser.doneScanning();
         ("iphone" === Ti.Platform.osname || "ipad" === Ti.Platform.osname) && $.winActorDetail.remove(cameraPreview);
     });
     overlayView.add(btnCancelVinCapture);
     overlayView.add(torchButton);
     RedLaser.addEventListener("scannerStatusUpdated", scannerStatusUpdatedHandler);
-    RedLaser.addEventListener("scannerReturnedResults", function(e) {
-        Ti.API.info("Received scannerReturnedResults event.");
-        e.foundBarcodes.forEach(barcodeResultHandler);
-    });
     RedLaser.addEventListener("scannerActivated", function() {
         if (RedLaser.isFlashAvailable) {
             torchButton.enabled = true;
@@ -560,6 +622,7 @@ function Controller() {
     __defers["$.__views.pActorType!change!pActorType_onChange"] && $.__views.pActorType.addEventListener("change", pActorType_onChange);
     __defers["$.__views.btnClosePicker!click!btnClosePicker_onClick"] && $.__views.btnClosePicker.addEventListener("click", btnClosePicker_onClick);
     __defers["$.__views.btnCaptureDl!click!btnCaptureDl_onClick"] && $.__views.btnCaptureDl.addEventListener("click", btnCaptureDl_onClick);
+    __defers["$.__views.imgOverride!click!imgOverride_onClick"] && $.__views.imgOverride.addEventListener("click", imgOverride_onClick);
     __defers["$.__views.btnCaptureVin!click!btnCaptureVin_onClick"] && $.__views.btnCaptureVin.addEventListener("click", btnCaptureVin_onClick);
     __defers["$.__views.tbOwnerDriver!click!tbOwnerDriver_onClick"] && $.__views.tbOwnerDriver.addEventListener("click", tbOwnerDriver_onClick);
     __defers["$.__views.btnCaptureDlOwner!click!btnCaptureDlOwner_onClick"] && $.__views.btnCaptureDlOwner.addEventListener("click", btnCaptureDlOwner_onClick);

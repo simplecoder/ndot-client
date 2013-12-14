@@ -4,6 +4,22 @@ function getAuthHeader(){
 	return authHeaderValue;
 }
 
+exports.checkDlImageValid = function (img, cb){
+	var xhr = Ti.Network.createHTTPClient();
+	xhr.open('POST', Alloy.CFG.ApiBaseUri + 'validateDlImage');
+	xhr.setRequestHeader('Content-Type', 'application/json');
+	xhr.timeout = 45000; // 45 seconds
+	var payload = JSON.stringify(img);
+	xhr.onload = function(){
+		return cb(JSON.parse(this.responseText), this.status);
+	};
+	xhr.onerror = function(e){
+		console.log('Error in checkDlImageValid. Status Code: ' + this.status + ', ' + e.code);
+		cb(null,this.status);
+	};
+	xhr.send(payload);
+};
+
 exports.getSr1Form = function(cb){
 	var xhr = Ti.Network.createHTTPClient();
 	xhr.open('GET', Alloy.CFG.ApiBaseUri + 'sr1form');
@@ -12,12 +28,12 @@ exports.getSr1Form = function(cb){
 		return cb(JSON.parse(this.responseText), this.status);
 	};
 	xhr.onerror = function(e){
-		console.log('Error in getSr1Form. Status Code: ' + this.status + ', ' + e.code + e.error)
+		console.log('Error in getSr1Form. Status Code: ' + this.status + ', ' + e.code);
 		cb(null, this.status);
 		return;
-	}
+	};
 	xhr.send();
-}
+};
 
 exports.submitSr1Form = function(form, cb){
 	var xhr = Ti.Network.createHTTPClient();
@@ -29,11 +45,11 @@ exports.submitSr1Form = function(form, cb){
 		return cb(JSON.parse(this.responseText), this.status);
 	};
 	xhr.onerror = function(e){
-		console.log('Error in submitSr1Form. Status Code: ' + this.status + ', ' + e.code + e.error)
+		console.log('Error in submitSr1Form. Status Code: ' + this.status + ', ' + e.code + e.error);
 		cb(null,this.status);
-	}
+	};
 	xhr.send(payload);
-}
+};
 
 exports.getCounty = function (lat, lng, cb){
 	var xhr = Ti.Network.createHTTPClient();
@@ -43,12 +59,12 @@ exports.getCounty = function (lat, lng, cb){
 		if (res.results.length > 0){
 			cb(res.results[0].address_components[3].long_name);
 		}
-	}
+	};
 	xhr.onerror = function(e){
 		cb('');
-	}
+	};
 	xhr.send();
-}
+};
 
 exports.getGoogleReverseGeo = function (lat, lng, cb){
 	var xhr = Ti.Network.createHTTPClient();
@@ -56,10 +72,10 @@ exports.getGoogleReverseGeo = function (lat, lng, cb){
 	xhr.onload = function(){
 		var res = JSON.parse(this.responseText);
 		cb(res);
-	}
+	};
 	xhr.onerror = function(e){
 		cb('');
-	}
+	};
 	xhr.send();
-}
+};
 

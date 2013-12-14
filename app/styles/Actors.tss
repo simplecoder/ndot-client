@@ -33,3 +33,7 @@
 		colors:[{color:'#009848',position:0.0},{color:'#00853f',position:1.0}]
 	}
 }
+
+'Window[platform=ios]':{
+	statusBarStyle: Titanium.UI.iPhone.StatusBar.LIGHT_CONTENT
+}

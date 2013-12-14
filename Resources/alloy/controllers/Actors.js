@@ -1,5 +1,10 @@
 function Controller() {
     function setupView() {
+        var titleLabel = Ti.UI.createLabel({
+            text: "Actor Detail",
+            color: "#fff"
+        });
+        $.winActors.titleControl = titleLabel;
         var plusBtn = Titanium.UI.createButton({
             top: 0,
             width: "30dp",
@@ -129,11 +134,7 @@ function Controller() {
         Alloy.Globals.tabMain.open(actorDetailController.getView());
     }
     function btnSubmitSr1_onClick() {
-        var dialog = Ti.UI.createAlertDialog({
-            message: "before submit",
-            title: "Submit SR1 Form"
-        });
-        dialog.show();
+        debugger;
         serviceAgent.submitSr1Form($.sr1Form, function(res, status) {
             var dialog = Ti.UI.createAlertDialog({
                 message: "Done submit. status: " + status + " res: " + res,
@@ -151,6 +152,7 @@ function Controller() {
     var exports = {};
     var __defers = {};
     $.__views.winActors = Ti.UI.createWindow({
+        statusBarStyle: Titanium.UI.iPhone.StatusBar.LIGHT_CONTENT,
         backgroundImage: "images/dark_fish_skin.png",
         backgroundRepeat: "true",
         barColor: "#111",
@@ -158,11 +160,11 @@ function Controller() {
         title: "Actors"
     });
     $.__views.winActors && $.addTopLevelView($.__views.winActors);
-    $.__views.__alloyId15 = Ti.UI.createScrollView({
+    $.__views.__alloyId24 = Ti.UI.createScrollView({
         layout: "vertical",
-        id: "__alloyId15"
+        id: "__alloyId24"
     });
-    $.__views.winActors.add($.__views.__alloyId15);
+    $.__views.winActors.add($.__views.__alloyId24);
     $.__views.tvActors = Ti.UI.createTableView({
         top: "0dp",
         backgroundColor: "#282828",
@@ -170,9 +172,9 @@ function Controller() {
         height: 0,
         id: "tvActors"
     });
-    $.__views.__alloyId15.add($.__views.tvActors);
+    $.__views.__alloyId24.add($.__views.tvActors);
     tvActors_onClick ? $.__views.tvActors.addEventListener("click", tvActors_onClick) : __defers["$.__views.tvActors!click!tvActors_onClick"] = true;
-    $.__views.__alloyId16 = Ti.UI.createButton({
+    $.__views.__alloyId25 = Ti.UI.createButton({
         top: "10dp",
         width: "280dp",
         height: "40dp",
@@ -192,10 +194,10 @@ function Controller() {
             } ]
         },
         title: "SUBMIT SR1 FORM",
-        id: "__alloyId16"
+        id: "__alloyId25"
     });
-    $.__views.__alloyId15.add($.__views.__alloyId16);
-    btnSubmitSr1_onClick ? $.__views.__alloyId16.addEventListener("click", btnSubmitSr1_onClick) : __defers["$.__views.__alloyId16!click!btnSubmitSr1_onClick"] = true;
+    $.__views.__alloyId24.add($.__views.__alloyId25);
+    btnSubmitSr1_onClick ? $.__views.__alloyId25.addEventListener("click", btnSubmitSr1_onClick) : __defers["$.__views.__alloyId25!click!btnSubmitSr1_onClick"] = true;
     exports.destroy = function() {};
     _.extend($, $.__views);
     var serviceAgent = require("serviceAgent");
@@ -203,7 +205,7 @@ function Controller() {
     $.sr1Form = args.sr1Form;
     setupView();
     __defers["$.__views.tvActors!click!tvActors_onClick"] && $.__views.tvActors.addEventListener("click", tvActors_onClick);
-    __defers["$.__views.__alloyId16!click!btnSubmitSr1_onClick"] && $.__views.__alloyId16.addEventListener("click", btnSubmitSr1_onClick);
+    __defers["$.__views.__alloyId25!click!btnSubmitSr1_onClick"] && $.__views.__alloyId25.addEventListener("click", btnSubmitSr1_onClick);
     _.extend($, exports);
 }
 

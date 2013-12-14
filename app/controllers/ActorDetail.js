@@ -1,10 +1,13 @@
 var RedLaser = require("ti.redlaser");
+var serviceAgent = require('serviceAgent');
+var cam = require('camera_overlay');
+    
 
 var args = arguments[0] || {};
 $.actor = args.actor;
 $.onCloseCb = args.onCloseCb;
 $.mode = args.mode;
-$.imageScaleFactor = 4;
+$.imageScaleFactor = 2;
 
 var cameraPreview = RedLaser.createCameraPreview({
     width: '100%', 
@@ -31,6 +34,7 @@ var btnCancelVinCapture = Ti.UI.createButton({
 });
 
 btnCancelVinCapture.addEventListener('click', function() {
+	RedLaser.removeEventListener('scannerStatusUpdated', scannerStatusUpdatedHandler);
     RedLaser.doneScanning();
     if (Ti.Platform.osname === 'iphone' || Ti.Platform.osname === 'ipad') {
         $.winActorDetail.remove(cameraPreview);
@@ -41,11 +45,7 @@ overlayView.add(btnCancelVinCapture);
 overlayView.add(torchButton);
 
 RedLaser.addEventListener('scannerStatusUpdated', scannerStatusUpdatedHandler);
-RedLaser.addEventListener('scannerReturnedResults', function(e) {
-    // This event is iOS only.
-    Ti.API.info('Received scannerReturnedResults event.');
-    e.foundBarcodes.forEach(barcodeResultHandler);
-});
+
 
 function scannerStatusUpdatedHandler(data){
 	if (data.newFoundBarcodes.length) {
@@ -59,7 +59,13 @@ function scannerStatusUpdatedHandler(data){
 
 function barcodeResultHandler(barcode){
 	$.imgVinCheck.setVisible(true);
-	$.actor.vin = barcode.barcodeString;
+	if (barcode.barcodeString.charAt(0) == 'I' || barcode.barcodeString.charAt(0) == 'i'){ // hack around a buggy scan
+		$.actor.vin = barcode.barcodeString.substring(1);
+	}else{
+		$.actor.vin = barcode.barcodeString;
+	}
+	alert ($.actor.vin);
+	RedLaser.removeEventListener('scannerStatusUpdated', scannerStatusUpdatedHandler);
 	RedLaser.doneScanning();
     if (Ti.Platform.osname === 'iphone' || Ti.Platform.osname === 'ipad') {
         $.winActorDetail.remove(cameraPreview);
@@ -96,40 +102,55 @@ function btnCaptureVin_onClick(){
         overlay: overlayView,
         orientation: RedLaser.PREF_ORIENTATION_PORTRAIT,
         cameraPreview: cameraPreview,
-         cameraIndex: undefined
+        cameraIndex: undefined
     });
 }
 
+function showNotif(msg){
+    $.lblNotif.text = msg;
+    $.lblNotif.height = '30dp',
+    $.lblNotif.visible = true;
+}
+
+function hideNotif(){
+	$.lblNotif.height = '0dp',
+    $.lblNotif.visible = false;
+}
+
 function btnCaptureDl_onClick(){
-	var cameraOptions = getCameraOptions();
-	cameraOptions.success = function(e) {
-    	// var resizedImage = e.media.imageAsResized(e.media.width / $.imageScaleFactor, e.media.height / $.imageScaleFactor)
-        // $.actor.dlBarcode = Ti.Utils.base64encode(resizedImage).toString();
-        // var a = Ti.Utils.base64decode($.actor.dlBarcode);
-        // console.log(a);
-        // debugger;
-        $.imgDlCheck.setVisible(true);
-        $.actor.dlBarcode = Ti.Utils.base64encode(e.media).toString();
-    }
+    var cameraOptions = getCameraOptions();
+    cameraOptions.success = function(e) {
+        var resizedImage = e.media.imageAsResized(e.media.width / $.imageScaleFactor, e.media.height / $.imageScaleFactor);
+        $.actor.dlBarcode = Ti.Utils.base64encode(resizedImage).toString();
+        $.actor.dlOverride = false;
+        //$.actor.dlBarcode = Ti.Utils.base64encode(e.media).toString();
+        showNotif('VALIDATING DRIVER LICENSE');
+        serviceAgent.checkDlImageValid($.actor.dlBarcode, function(res, status){
+            $.actor.dlBarCodeValid = res;
+            setDlStatusImage();
+            hideNotif();
+        });
+   };
     if (Ti.Media.isCameraSupported) {
-    	var dialog = Ti.UI.createOptionDialog({
-			cancel: 2,
-			options: ['Camera', 'Photo Gallery', 'Cancel'],
-			selectedIndex: 2,
-			title: 'Use camera or photo gallery?'
-		});
-		dialog.addEventListener('click', function(e){
-			if (e.index == 0){
-				Ti.Media.showCamera(cameraOptions);		
-			}else if (e.index == 1){
-				Ti.Media.openPhotoGallery(cameraOptions);		
-			}
-		})
-    	dialog.show();
+        var dialog = Ti.UI.createOptionDialog({
+            cancel: 2,
+            options: ['Camera', 'Photo Gallery', 'Cancel'],
+            selectedIndex: 2,
+            title: 'Use camera or photo gallery?'
+        });
+        dialog.addEventListener('click', function(e){
+            if (e.index == 0){
+                Ti.Media.showCamera(cameraOptions);       
+            }else if (e.index == 1){
+            	cameraOptions.saveToPhotoGallery = false;
+                Ti.Media.openPhotoGallery(cameraOptions);       
+            }
+        });
+        dialog.show();
         
     } else {
         Ti.Media.openPhotoGallery(cameraOptions);
-    }	
+    }   
 }
 
 function btnCaptureDlOwner_onClick(){
@@ -137,7 +158,7 @@ function btnCaptureDlOwner_onClick(){
 	cameraOptions.success = function(e) {
 		$.imgDlOwnerCheck.setVisible(true);
         $.actor.dlBarcodeOwner = Ti.Utils.base64encode(e.media).toString();
-    }
+   };
     if (Ti.Media.isCameraSupported) {
     	var dialog = Ti.UI.createOptionDialog({
 			cancel: 2,
@@ -152,7 +173,7 @@ function btnCaptureDlOwner_onClick(){
 			}else if (e.index == 1){
 				Ti.Media.openPhotoGallery(cameraOptions);		
 			}
-		})
+		});
     	dialog.show();
         
     } else {
@@ -178,7 +199,7 @@ function getCameraOptions(){
         },
         saveToPhotoGallery : true,
         allowEditing : true,
-        mediaTypes : [Ti.Media.MEDIA_TYPE_PHOTO]
+        mediaTypes : [Ti.Media.MEDIA_TYPE_PHOTO],
     };
     return cameraOptions;
 }
@@ -240,8 +261,32 @@ function tbOwnerDriver_onClick(e){
 		$.actor.ownerSameAsDriver = true;
 	}
 }
- 		                
+
+function setDlStatusImage(){
+	if ($.actor.dlBarCodeValid){
+		$.imgDlStatus.image = image = "/images/check.png";
+	}else{
+		$.imgDlStatus.image = image = "/images/warn.png";
+	}
+	$.imgDlStatus.setVisible(true);
+}
+
+function imgOverride_onClick(){
+	var actorDlOverrideController = Alloy.createController('ActorDlOverride',{
+		actor: $.actor,
+	}); 
+    Alloy.Globals.tabMain.open(actorDlOverrideController.getView());
+}
+
 function setupView(){
+	
+	// hack to set the color of the title 
+	var titleLabel = Ti.UI.createLabel({
+		text:'Actor Detail',
+		color:'#fff'
+	});	
+	$.winActorDetail.titleControl = titleLabel;
+	
 	switch ($.actor.actorType){
 		case 'Driver':
 			$.pActorType.setSelectedRow(0,0,true);
@@ -270,7 +315,7 @@ function setupView(){
 	if ($.actor.vin != '')
 		$.imgVinCheck.setVisible(true);
 	if ($.actor.dlBarcode != '')
-		$.imgDlCheck.setVisible(true);
+		setDlStatusImage();
 	if ($.actor.dlBarcodeOwner != '')
 		$.imgDlOwnerCheck.setVisible(true);
 	if ($.actor.ownerSameAsDriver == false){

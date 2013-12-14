@@ -1,7 +1,7 @@
 <Alloy>
 	<Window id="winActorDetail" title="Actor Detail" onClose='winActorDetail_onClose'>
 		<ScrollView class="container">
-			
+			<Label id="lblNotif" text=" "></Label>
 			<Label text="Actor Type"></Label>
 			<TextField id='txtActorType' onClick="txtActorType_onClick"></TextField>
 			<View id="vActorType">
@@ -17,7 +17,8 @@
 		        <Button id="btnClosePicker" onClick="btnClosePicker_onClick" title="DONE" />
 			</View>
 			<Button id="btnCaptureDl" onClick="btnCaptureDl_onClick" title="CAPTURE DL" />
-			<ImageView id="imgDlCheck" image="/images/check.png" />
+			<ImageView id="imgOverride" image="/images/override.png" onClick="imgOverride_onClick" />
+			<ImageView id="imgDlStatus" />
 			<View id='vVehicleData'>
 				<Button id="btnCaptureVin" onClick="btnCaptureVin_onClick" title="CAPTURE VIN" />
 				<ImageView id="imgVinCheck" image="/images/check.png" />

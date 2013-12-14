@@ -1,11 +1,11 @@
 
 ".container" : {
-  	backgroundImage: 'images/dark_fish_skin.png',
+	backgroundImage: 'images/dark_fish_skin.png',
 	backgroundRepeat: 'true',
   	layout: 'vertical'
 }
 
-'#winLocation':{
+'#winActorDlOverride':{
 	navBarHidden: "false",
 	barColor: '#111'
 }
@@ -14,12 +14,9 @@
 	statusBarStyle: Titanium.UI.iPhone.StatusBar.LIGHT_CONTENT
 }
 
-".lblAddress":{
-	top: '15dp',
-	left: '15dp'
-}
-
 "Label":{
+	top: '15dp',
+	left: '15dp',
 	color: '#acacac',
 	font:{
 		fontSize: '16dp'
@@ -34,12 +31,6 @@
 	borderStyle: Ti.UI.INPUT_BORDERSTYLE_ROUNDED,
 	borderRadius: '5dp',
 	backgroundImage: 'none',
-	width: '220dp',
+	width: '190dp',
 	height: '30dp'
 }
-
-'#btnNext':{
-	top: '15dp',
-	right: '15dp'
-}
-

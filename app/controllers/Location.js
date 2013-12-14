@@ -73,3 +73,14 @@ function btnNext_onClick(){
 	});    
     Alloy.Globals.tabMain.open(actorsController.getView());
 }
+
+function setupView(){
+	// hack to set the color of the title 
+	var titleLabel = Ti.UI.createLabel({
+		text:'Location',
+		color:'#fff'
+	});	
+	$.winLocation.titleControl = titleLabel;
+}
+
+setupView();

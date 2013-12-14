@@ -17,12 +17,20 @@
 	visible: false
 } 
 
-'#imgDlCheck':{
+'#imgDlStatus':{
+	height: '30dp',
 	visible: false
 }
 
 '#imgDlOwnerCheck':{
 	visible: false
+}
+
+'#imgOverride':{
+	height: '40dp',
+	width: '40dp',
+	top: '-40dp',
+	left: '35dp'
 }
 
 'Button':{
@@ -38,6 +46,11 @@
 		type:'linear',
 		colors:[{color:'#009848',position:0.0},{color:'#00853f',position:1.0}]
 	}
+}
+
+'#btnCaptureDl':{
+	width:"210dp",
+	right: '35dp'
 }
 
 '#vActorType':{
@@ -89,7 +102,7 @@
 
 "TabbedBar":{
 	index: 0,
-	backgroundColor:'#363636',
+	backgroundColor:'#009848',
 	top: '-24dp',
 	right: '20dp',
 	height: '25dp',
@@ -117,5 +130,23 @@
 
 '#txtPlateNum':{
 	autocapitalization: Ti.UI.TEXT_AUTOCAPITALIZATION_ALL
+}
+
+'Window[platform=ios]':{
+	statusBarStyle: Titanium.UI.iPhone.StatusBar.LIGHT_CONTENT
+}
+
+'#lblNotif':{
+	height: '0dp',
+	backgroundColor: '#dead18',
+	color: '#fff',
+	textAlign: Ti.UI.TEXT_ALIGNMENT_CENTER,
+	visible: false,
+	width: Ti.UI.FILL,
+	top: '0dp',
+	left: '0dp',
+	font:{
+		fontSize: '13dp'
+	}
 }
 

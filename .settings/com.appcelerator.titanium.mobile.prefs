@@ -1,8 +1,8 @@
 eclipse.preferences.version=1
 iosLaunchConfigurationAttributes/ATTR_MINIFY=true
 iosLaunchConfigurationAttributes/ATTR_PROJECT_NAME=ndot
-iosLaunchConfigurationAttributes/appid=edu.unlv.ndot
+iosLaunchConfigurationAttributes/appid=edu.unlv.ndot3
 iosLaunchConfigurationAttributes/certificate=Tharindu Abeygunawardana (RTCRE6U4HX)
 iosLaunchConfigurationAttributes/keychain=
-iosLaunchConfigurationAttributes/sdk_version=6.1
-iosLaunchConfigurationAttributes/uuid=864F4704-CE52-4054-83AE-736EFBC74FDD
+iosLaunchConfigurationAttributes/sdk_version=7.0
+iosLaunchConfigurationAttributes/uuid=06FA620D-CD2A-4F63-AE95-90B9D79639C6

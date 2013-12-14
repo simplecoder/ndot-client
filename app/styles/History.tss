@@ -14,3 +14,7 @@
 	backgroundColor: '#282828',
 	separatorColor: '#363636'
 }
+
+'Window[platform=ios]':{
+	statusBarStyle: Titanium.UI.iPhone.StatusBar.LIGHT_CONTENT
+}

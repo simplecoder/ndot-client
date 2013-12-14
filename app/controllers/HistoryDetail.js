@@ -21,6 +21,14 @@ function addLabel(left, text){
 }
 
 function setupView(){
+	// hack to set the color of the title 
+	var titleLabel = Ti.UI.createLabel({
+		text:'History Detail',
+		color:'#fff'
+	});	
+	$.winHistoryDetail.titleControl = titleLabel;
+	
+	
 	$.lblStreet.setText('Street: ' + $.form.Street);
 	$.lblCity.setText('City: ' + $.form.City);
 	$.lblCounty.setText('County: ' + $.form.County);

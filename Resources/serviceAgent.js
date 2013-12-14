@@ -4,6 +4,22 @@ function getAuthHeader() {
     return authHeaderValue;
 }
 
+exports.checkDlImageValid = function(img, cb) {
+    var xhr = Ti.Network.createHTTPClient();
+    xhr.open("POST", Alloy.CFG.ApiBaseUri + "validateDlImage");
+    xhr.setRequestHeader("Content-Type", "application/json");
+    xhr.timeout = 45e3;
+    var payload = JSON.stringify(img);
+    xhr.onload = function() {
+        return cb(JSON.parse(this.responseText), this.status);
+    };
+    xhr.onerror = function(e) {
+        console.log("Error in checkDlImageValid. Status Code: " + this.status + ", " + e.code);
+        cb(null, this.status);
+    };
+    xhr.send(payload);
+};
+
 exports.getSr1Form = function(cb) {
     var xhr = Ti.Network.createHTTPClient();
     xhr.open("GET", Alloy.CFG.ApiBaseUri + "sr1form");
@@ -12,7 +28,7 @@ exports.getSr1Form = function(cb) {
         return cb(JSON.parse(this.responseText), this.status);
     };
     xhr.onerror = function(e) {
-        console.log("Error in getSr1Form. Status Code: " + this.status + ", " + e.code + e.error);
+        console.log("Error in getSr1Form. Status Code: " + this.status + ", " + e.code);
         cb(null, this.status);
         return;
     };
