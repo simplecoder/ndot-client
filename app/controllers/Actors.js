@@ -6,7 +6,7 @@ $.sr1Form = args.sr1Form;
 function setupView(){
 	// hack to set the color of the title 
 	var titleLabel = Ti.UI.createLabel({
-		text:'Actor Detail',
+		text:'Actors',
 		color:'#fff'
 	});	
 	$.winActors.titleControl = titleLabel;

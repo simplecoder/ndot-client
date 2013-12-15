@@ -1,7 +1,5 @@
 var RedLaser = require("ti.redlaser");
 var serviceAgent = require('serviceAgent');
-var cam = require('camera_overlay');
-    
 
 var args = arguments[0] || {};
 $.actor = args.actor;
@@ -43,9 +41,6 @@ btnCancelVinCapture.addEventListener('click', function() {
 
 overlayView.add(btnCancelVinCapture);
 overlayView.add(torchButton);
-
-RedLaser.addEventListener('scannerStatusUpdated', scannerStatusUpdatedHandler);
-
 
 function scannerStatusUpdatedHandler(data){
 	if (data.newFoundBarcodes.length) {
@@ -244,6 +239,7 @@ function btnDeleteActor_onClick(){
 }
 
 function winActorDetail_onClose(){
+	RedLaser.removeEventListener('scannerStatusUpdated', scannerStatusUpdatedHandler);
 	$.actor.actorType = $.txtActorType.getValue();
 	$.actor.plateNum = $.txtPlateNum.getValue();
 	$.actor.plateState = $.txtPlateState.getValue();
@@ -323,6 +319,8 @@ function setupView(){
 		$.btnCaptureDlOwner.setVisible(true);
 		$.tbOwnerDriver.setIndex(1);	
 	}
+	
+	RedLaser.addEventListener('scannerStatusUpdated', scannerStatusUpdatedHandler);
 }
 
 setupView();

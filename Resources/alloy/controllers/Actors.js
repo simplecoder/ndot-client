@@ -1,7 +1,7 @@
 function Controller() {
     function setupView() {
         var titleLabel = Ti.UI.createLabel({
-            text: "Actor Detail",
+            text: "Actors",
             color: "#fff"
         });
         $.winActors.titleControl = titleLabel;
@@ -134,7 +134,6 @@ function Controller() {
         Alloy.Globals.tabMain.open(actorDetailController.getView());
     }
     function btnSubmitSr1_onClick() {
-        debugger;
         serviceAgent.submitSr1Form($.sr1Form, function(res, status) {
             var dialog = Ti.UI.createAlertDialog({
                 message: "Done submit. status: " + status + " res: " + res,

@@ -131,6 +131,7 @@ function Controller() {
         $.winActorDetail.close();
     }
     function winActorDetail_onClose() {
+        RedLaser.removeEventListener("scannerStatusUpdated", scannerStatusUpdatedHandler);
         $.actor.actorType = $.txtActorType.getValue();
         $.actor.plateNum = $.txtPlateNum.getValue();
         $.actor.plateState = $.txtPlateState.getValue();
@@ -194,6 +195,7 @@ function Controller() {
             $.btnCaptureDlOwner.setVisible(true);
             $.tbOwnerDriver.setIndex(1);
         }
+        RedLaser.addEventListener("scannerStatusUpdated", scannerStatusUpdatedHandler);
     }
     require("alloy/controllers/BaseController").apply(this, Array.prototype.slice.call(arguments));
     this.__controllerPath = "ActorDetail";
@@ -559,7 +561,6 @@ function Controller() {
     _.extend($, $.__views);
     var RedLaser = require("ti.redlaser");
     var serviceAgent = require("serviceAgent");
-    require("camera_overlay");
     var args = arguments[0] || {};
     $.actor = args.actor;
     $.onCloseCb = args.onCloseCb;
@@ -598,7 +599,6 @@ function Controller() {
     });
     overlayView.add(btnCancelVinCapture);
     overlayView.add(torchButton);
-    RedLaser.addEventListener("scannerStatusUpdated", scannerStatusUpdatedHandler);
     RedLaser.addEventListener("scannerActivated", function() {
         if (RedLaser.isFlashAvailable) {
             torchButton.enabled = true;
