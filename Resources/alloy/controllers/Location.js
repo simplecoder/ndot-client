@@ -7,6 +7,8 @@ function Controller() {
                 latitudeDelta: .01,
                 longitudeDelta: .01
             };
+            sr1Form.latitude = e.coords.latitude;
+            sr1Form.longitude = e.coords.longitude;
             serviceAgent.getGoogleReverseGeo(e.coords.latitude, e.coords.longitude, function(res) {
                 if (res.results.length > 0) {
                     $.txtStreet.setValue(getStreetNumber(res.results[0].address_components) + " " + getStreet(res.results[0].address_components));
